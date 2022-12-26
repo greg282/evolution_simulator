@@ -47,7 +47,9 @@ public class Map {
 
         List<Animal> animalsToUpdate = animals.get(animal.getPosition());
         animalsToUpdate.remove(animal);
-        if ( animalsToUpdate.size() == 0) animals.remove(animal.getPosition());
+        if ( animalsToUpdate.size() == 0) {
+            animals.remove(animal.getPosition());
+        }
     }
 
     public boolean canMoveTo(Vector2d position) {

@@ -6,11 +6,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+
+
 public class App extends Application implements IPositionChangeObserver {
 
     private SimulationEngine engine;
     private Map map;
 
+    protected java.util.Map<Vector2d, Plant> plants = new HashMap<>();
     private VBox vBox;
 
     private int cellWidth = 40;
@@ -20,11 +24,14 @@ public class App extends Application implements IPositionChangeObserver {
         try {
             map = new Map(10,10);
 
-            engine = new SimulationEngine(map);
+
+            engine = new SimulationEngine(map,plants,this);
+
             engine.addAnimalsObserver(this);
             engine.setDelay(1000);
 
             vBox = new VBox(10, new Label(""));
+
 
         } catch(IllegalArgumentException exception) {
             System.out.println("EXCEPTION: " + exception.getMessage() + " TERMINATING PROGRAM");
@@ -85,8 +92,14 @@ public class App extends Application implements IPositionChangeObserver {
 
                     gridPane.add( elementBox , i - map.getLowerLeftVector().x + 1, map.getUpperRightVector().y - j + 1, 1, 1);
                 }
+                if(plants.containsKey(new Vector2d(i,j))){
+                    gridPane.add( new Label("Plant") , i - map.getLowerLeftVector().x + 1, map.getUpperRightVector().y - j + 1, 1, 1);
+
+                }
             }
         }
+
+
 
         vBox.getChildren().remove(0);
         vBox.getChildren().add(0, gridPane);

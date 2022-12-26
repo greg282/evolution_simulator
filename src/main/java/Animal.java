@@ -10,6 +10,15 @@ public class Animal extends AbstractWorldMapElement {
 
     int energy;
 
+    int n_of_children=0;
+
+
+    private int age=0;
+
+    public int[] getGenome() {
+        return genome;
+    }
+
     private int[] genome;
     private int current;
 
@@ -54,5 +63,13 @@ public class Animal extends AbstractWorldMapElement {
         for (IPositionChangeObserver observer: observers) {
             observer.positionChanged();
         }
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void updateAge() {
+        this.age++;
     }
 }
