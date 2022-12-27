@@ -10,19 +10,12 @@ public class Animal extends AbstractWorldMapElement {
 
     int energy;
 
-    int n_of_children=0;
+    int n_of_children = 0;
 
-
-    private int age=0;
-
-    public int[] getGenome() {
-        return genome;
-    }
+    private int age = 0;
 
     private int[] genome;
     private int current;
-
-    private List<IPositionChangeObserver> observers = new ArrayList<>();
 
     Animal(Map map, Vector2d position, int[] genome, int energy) {
 
@@ -50,19 +43,12 @@ public class Animal extends AbstractWorldMapElement {
             map.remove(this);
             this.position = nextPosition;
             map.place(this);
-            positionChanged();
         }
 
     }
 
-    void addObserver(IPositionChangeObserver observer) {
-        observers.add(observer);
-    }
-
-    void positionChanged() {
-        for (IPositionChangeObserver observer: observers) {
-            observer.positionChanged();
-        }
+    public int[] getGenome() {
+        return genome;
     }
 
     public int getAge() {
