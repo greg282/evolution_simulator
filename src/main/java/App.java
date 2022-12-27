@@ -19,6 +19,7 @@ public class App extends Application {
         //?dodać jungle height i width?
         //?dodać daily energy cost?
         //?dodać refresh time (ms)?
+        //?dodać energię maksymalną zwierzęcia?
 
         int spacingValue = 10;
 

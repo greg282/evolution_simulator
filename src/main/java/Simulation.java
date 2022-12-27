@@ -1,7 +1,10 @@
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
@@ -25,9 +28,28 @@ public class Simulation {
         map = new Map(10,10);
 
         engine = new SimulationEngine(this, map, plants);
-        engine.setDelay(1000);
+        engine.setDelay(200);
 
-        vBox = new VBox(10, new Label(""));
+        Button startStopButton = new Button("Pause");
+        startStopButton.setStyle("-fx-font-size: 18pt; -fx-padding: 5 20 5 20;");
+
+        startStopButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+
+                if (startStopButton.getText() == "Pause") {
+                    startStopButton.setText("Unpause");
+                    engine.pause();
+                }
+
+                else {
+                    startStopButton.setText("Pause");
+                    engine.unpause();
+                }
+
+            }
+        });
+
+        vBox = new VBox(10, new Label(""), startStopButton);
 
     }
 

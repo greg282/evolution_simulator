@@ -9,6 +9,7 @@ public class SimulationEngine implements IEngine, Runnable {
     private List<Animal> animals = new ArrayList<>();
     protected java.util.Map<Vector2d, Plant> plants;
     private int delay = 0;
+    private boolean paused = false;
 
     SimulationEngine(Simulation simulation, Map map, java.util.Map plants_map) {
         this.simulation = simulation;
@@ -33,6 +34,14 @@ public class SimulationEngine implements IEngine, Runnable {
         this.delay = delay;
     }
 
+    public void pause() {
+        this.paused = true;
+    }
+
+    public void unpause() {
+        this.paused = false;
+    }
+
     public void run() {
 
         while (true) {
@@ -43,36 +52,39 @@ public class SimulationEngine implements IEngine, Runnable {
                 System.out.println("EXCEPTION: Simulation stopped TERMINATING SIMULATION");
             }
 
-            //usunięcie martwych zwierząt zwierząt z mapy
-            for (int i = 0; i < animals.size(); i++) {
-                if ( animals.get(i).energy == 0 ) {
-                    map.remove(animals.get(i));
-                    animals.remove(animals.get(i));
-                    i--;
+            if (!paused) {
+
+                //usunięcie martwych zwierząt zwierząt z mapy
+                for (int i = 0; i < animals.size(); i++) {
+                    if ( animals.get(i).energy == 0 ) {
+                        map.remove(animals.get(i));
+                        animals.remove(animals.get(i));
+                        i--;
+                    }
                 }
+
+                //skręt i przemieszczenie każdego zwierzęcia
+                for (Animal animal: animals) {
+                    animal.move();
+                    animal.updateAge();
+                }
+
+                //konsumpcja roślin na których pola weszły zwierzęta
+                animalsEating();
+
+                //rozmnażanie się najedzonych zwierząt znajdujących się na tym samym polu
+                animalsMultiplication();
+
+                //wzrastanie nowych roślin na wybranych polach mapy
+                addPlants(2);
+
+
+                Animal animal2 = new Animal(map, new Vector2d(2,2), new int[] {1, 0, 5, 0, 4}, 10);
+                if(map.place(animal2))  animals.add(animal2);
+
+                //refresh mapy
+                this.simulation.mapRefresh();
             }
-
-            //skręt i przemieszczenie każdego zwierzęcia
-            for (Animal animal: animals) {
-                animal.move();
-                animal.updateAge();
-            }
-
-            //konsumpcja roślin na których pola weszły zwierzęta
-            animalsEating();
-
-            //rozmnażanie się najedzonych zwierząt znajdujących się na tym samym polu
-            animalsMultiplication();
-
-            //wzrastanie nowych roślin na wybranych polach mapy
-            addPlants(2);
-
-
-            Animal animal2 = new Animal(map, new Vector2d(2,2), new int[] {1, 0, 5, 0, 4}, 10);
-            if(map.place(animal2))  animals.add(animal2);
-
-            //refresh mapy
-            this.simulation.mapRefresh();
         }
     }
 
