@@ -5,17 +5,17 @@ public class SimulationEngine implements IEngine, Runnable {
     private int plantEnergy = 4;
 
     private Map map;
-    private App app;
+    private Simulation simulation;
     private List<Animal> animals = new ArrayList<>();
     protected java.util.Map<Vector2d, Plant> plants;
     private int delay = 0;
 
-    SimulationEngine(App app, Map map, java.util.Map plants_map) {
-        this.app = app;
+    SimulationEngine(Simulation simulation, Map map, java.util.Map plants_map) {
+        this.simulation = simulation;
         this.map = map;
         this.plants = plants_map;
 
-        // tutaj spawn początkowych zwierząt
+        //tutaj spawn początkowych zwierząt
 
         Animal animal1 = new Animal(map, new Vector2d(1,1), new int[] {0}, 4);
         animals.add(animal1);
@@ -40,8 +40,7 @@ public class SimulationEngine implements IEngine, Runnable {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException exception) {
-                System.out.println("EXCEPTION: Simulation stopped TERMINATING PROGRAM");
-                System.exit(0);
+                System.out.println("EXCEPTION: Simulation stopped TERMINATING SIMULATION");
             }
 
             //usunięcie martwych zwierząt zwierząt z mapy
@@ -73,7 +72,7 @@ public class SimulationEngine implements IEngine, Runnable {
             if(map.place(animal2))  animals.add(animal2);
 
             //refresh mapy
-            this.app.mapRefresh();
+            this.simulation.mapRefresh();
         }
     }
 
