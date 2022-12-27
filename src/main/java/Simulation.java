@@ -1,8 +1,10 @@
 import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -78,15 +80,25 @@ public class Simulation {
 
             for (int j = map.getLowerLeftVector().y; j <= map.getUpperRightVector().y; j++) {
 
-                if (map.isOccupied(new Vector2d(i,j))) {
+                if ( map.isOccupied(new Vector2d(i,j)) || plants.containsKey(new Vector2d(i,j)) ) { //pole jest zajęte przez przynajmniej jedno zwierzę lub na polu rośnie roślina
 
-                    VBox elementBox = new GuiElementBox( (IMapElement) map.objectAt( new Vector2d(i,j) ) ).getElementBox();
+                    VBox elementBox = new VBox();
+
+                    if ( map.isOccupied(new Vector2d(i,j)) ) {
+
+                        double colorValue = (double) map.animalAt( new Vector2d(i,j) ).energy / 10;
+                        Circle circle = new Circle(15);
+                        circle.setFill(javafx.scene.paint.Color.color(1-colorValue, 1-colorValue, 1-colorValue));
+                        elementBox = new VBox(circle);
+                        elementBox.setAlignment(Pos.CENTER);
+
+                    }
+
+                    if ( plants.containsKey(new Vector2d(i,j)) ) {
+                        elementBox.setStyle("-fx-background-color: green;");
+                    }
 
                     gridPane.add( elementBox , i - map.getLowerLeftVector().x + 1, map.getUpperRightVector().y - j + 1, 1, 1);
-                }
-                if (plants.containsKey(new Vector2d(i,j))) {
-                    gridPane.add( new Label("Plant") , i - map.getLowerLeftVector().x + 1, map.getUpperRightVector().y - j + 1, 1, 1);
-
                 }
             }
         }

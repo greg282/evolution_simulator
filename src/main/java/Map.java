@@ -57,12 +57,10 @@ public class Map {
     }
 
     public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);  //|| grass.containsKey(position);
+        return animals.containsKey(position);
     }
 
-    public Object objectAt(Vector2d position) {
-        Object returnObject = animals.get(position).get(0); //wybiera pierwszy element z listy do wyświetlenia
-        //if (returnObject == null) returnObject = grass.get(position);
-        return returnObject;
+    public Animal animalAt(Vector2d position) {
+        return animals.get(position).get(0); //wybiera pierwsze zwierzę z listy do wyświetlenia
     }
 }
