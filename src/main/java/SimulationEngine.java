@@ -15,6 +15,7 @@ public class SimulationEngine implements IEngine, Runnable {
     private int mutationMinimum;
     private int mutationMaximum;
 
+    private int maxEnergy;
     private int genomeLength;
 
     private int startingEnergy;
@@ -43,7 +44,10 @@ public class SimulationEngine implements IEngine, Runnable {
             boolean globeVariant,
             boolean equatorsVariant,
             boolean randomnessVariant,
-            boolean predestinationVariant) {
+            boolean predestinationVariant,
+            int maxEnergy
+
+            ) {
 
         this.simulation = simulation;
         this.map = map;
@@ -60,6 +64,7 @@ public class SimulationEngine implements IEngine, Runnable {
         this.equatorsVariant = equatorsVariant;
         this.randomnessVariant = randomnessVariant;
         this.predestinationVariant = predestinationVariant;
+        this.maxEnergy=maxEnergy;
 
         //spawn początkowych zwierząt
         spawnStartingAnimals(startingAnimals, startingEnergy);
@@ -252,7 +257,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 Collections.sort(animals_at_position, new AnimalComparator());
                 Animal best_animal = animals_at_position.get(animals_at_position.size() - 1);
                 best_animal.energy = best_animal.energy + plantEnergy;
-                if (best_animal.energy>this.startingEnergy) best_animal.energy=startingEnergy; //zakładam że max energia to 10 tak jak teraz jest
+                if (best_animal.energy>this.maxEnergy) best_animal.energy=this.maxEnergy;
                 plants.remove(animal.getPosition());
             }
         }
@@ -303,7 +308,7 @@ public class SimulationEngine implements IEngine, Runnable {
                     int new_energy=2*breedEnergy;
 
                     if(new_energy>this.startingEnergy){
-                        new_energy=this.startingEnergy;//żeby błędu koloru nie rzuciło
+                        new_energy=this.startingEnergy;
                     }
 
                     Animal child = new Animal(map, best_animal1.getPosition(), child_genome(best_animal1, best_animal2),new_energy);

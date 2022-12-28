@@ -81,6 +81,12 @@ public class App extends Application {
         startingEnergy.setSpacing(spacingValue);
         startingEnergy.setAlignment(Pos.CENTER);
 
+        Label maxEnergyLabel = new Label("Max animal energy:");
+        TextField MaxEnergyInput = new TextField("10");
+        HBox maxEnergy = new HBox(maxEnergyLabel, MaxEnergyInput);
+        maxEnergy.setSpacing(spacingValue);
+        maxEnergy.setAlignment(Pos.CENTER);
+
         Label breedReadyLabel = new Label("(dziala dla liczb >= 3) Energy needed to consider animal ready to breed:");
         TextField breedReadyInput = new TextField("5");
         HBox breedReady = new HBox(breedReadyLabel, breedReadyInput);
@@ -147,6 +153,7 @@ public class App extends Application {
                 plantsVariant,
                 startingAnimals,
                 startingEnergy,
+                maxEnergy,
                 breedReady,
                 breedEnergy,
                 mutationNumber,
@@ -155,6 +162,7 @@ public class App extends Application {
                 behaviorVariant,
                 start,
                 invalidArgument
+
         );
         vbox.setSpacing(20);
         vbox.setPadding(new Insets(25, 25, 25, 25));
@@ -180,8 +188,11 @@ public class App extends Application {
                     if (Integer.parseInt(growingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
                     if (Integer.parseInt(startingAnimalsInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
                     if (Integer.parseInt(startingEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
+                    if (Integer.parseInt(startingEnergyInput.getText()) > Integer.parseInt(MaxEnergyInput.getText())) throw new IllegalArgumentException("Starting energy bigger than max energy");
+                    if (Integer.parseInt(MaxEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
                     if (Integer.parseInt(breedReadyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
                     if (Integer.parseInt(breedEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
+                    if (Integer.parseInt(breedEnergyInput.getText()) > Integer.parseInt(breedReadyInput.getText())) throw new IllegalArgumentException("Error: breedEnergy bigger than breedReady");
                     if (Integer.parseInt(mutationMinimumInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
                     if (Integer.parseInt(mutationMaximumInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
                     if (Integer.parseInt(genomeLengthInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
@@ -203,9 +214,10 @@ public class App extends Application {
                             globe.isSelected(),
                             equators.isSelected(),
                             randomness.isSelected(),
-                            predestination.isSelected()
+                            predestination.isSelected(),
+                            Integer.parseInt(MaxEnergyInput.getText())
 
-                    );
+                            );
                     simulation.start(new Stage());
                     invalidArgumentLabel.setText("");
                     invalidArgumentLabel.setTextFill(Color.BLACK);
