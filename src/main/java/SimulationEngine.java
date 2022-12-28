@@ -2,21 +2,49 @@ import java.util.*;
 
 public class SimulationEngine implements IEngine, Runnable {
 
-    private int plantEnergy = 4;
+
 
     private Map map;
     private Simulation simulation;
     private List<Animal> animals = new ArrayList<>();
     protected java.util.Map<Vector2d, Plant> plants;
+    private int plantEnergy;
+    private int growingPlants;
+    private int breedReady;
+    private int breedEnergy;
+    private int mutationMinimum;
+    private int mutationMaximum;
+
     private int delay = 0;
     private boolean paused = false;
 
-    SimulationEngine(Simulation simulation, Map map, java.util.Map plants_map) {
+    SimulationEngine(
+            Simulation simulation,
+            Map map,
+            java.util.Map plants_map,
+            int startingPlants,
+            int providedEnergy,
+            int growingPlants,
+            int startingAnimals,
+            int startingEnergy,
+            int breedReady,
+            int breedEnergy,
+            int mutationMinimum,
+            int mutationMaximum,
+            int genomeLength) {
+
         this.simulation = simulation;
         this.map = map;
         this.plants = plants_map;
+        this.plantEnergy = providedEnergy;
+        this.growingPlants = growingPlants;
+        this.breedReady = breedReady;
+        this.breedEnergy = breedEnergy;
+        this.mutationMinimum = mutationMinimum;
+        this.mutationMaximum = mutationMaximum;
 
         //tutaj spawn początkowych zwierząt
+        //! liczba początkowych zwierząt określa zmienna startingAnimals, a wartosc poczatkowej energii zmienna startingEnergy !
 
         Animal animal1 = new Animal(map, new Vector2d(1,1), new int[] {0}, 4);
         animals.add(animal1);
@@ -26,7 +54,7 @@ public class SimulationEngine implements IEngine, Runnable {
         animals.add(animal2);
         map.place(animal2);
 
-        addPlants(10); //spawn roslin na mapie z zasadą równika
+        addPlants(startingPlants); //spawn roslin na mapie z zasadą równika
 
     }
 
@@ -49,7 +77,7 @@ public class SimulationEngine implements IEngine, Runnable {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException exception) {
-                System.out.println("EXCEPTION: Simulation stopped TERMINATING SIMULATION");
+                System.out.println("Simulation stopped");
             }
 
             if (!paused) {
@@ -76,7 +104,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 animalsMultiplication();
 
                 //wzrastanie nowych roślin na wybranych polach mapy
-                addPlants(2);
+                addPlants(growingPlants);
 
 
                 Animal animal2 = new Animal(map, new Vector2d(2,2), new int[] {1, 0, 5, 0, 4}, 10);
@@ -194,16 +222,13 @@ public class SimulationEngine implements IEngine, Runnable {
                 Animal best_animal1 = animals_at_position.get(animals_at_position.size()-1);
                 Animal best_animal2 = animals_at_position.get(animals_at_position.size()-2);
 
-                int required_amount_of_energy = 4; //energia konieczna, by uznać zwierzaka za najedzonego (i gotowego do rozmnażania)
-                int energy_used = 2; //energia rodziców zużywana by stworzyć potomka,
-
-                if (best_animal1.energy >= required_amount_of_energy && best_animal2.energy >= required_amount_of_energy) {
+                if (best_animal1.energy >= breedReady && best_animal2.energy >= breedReady) {
                     best_animal1.n_of_children++;
                     best_animal2.n_of_children++;
-                    best_animal2.energy -= energy_used;
-                    best_animal1.energy -= energy_used;
+                    best_animal2.energy -= breedEnergy;
+                    best_animal1.energy -= breedEnergy;
 
-                    Animal child = new Animal(map, best_animal1.getPosition(), child_genome(best_animal1, best_animal2),2 * energy_used);
+                    Animal child = new Animal(map, best_animal1.getPosition(), child_genome(best_animal1, best_animal2),2 * breedEnergy);
                     if (map.place(child)) {
                         child_animal_list.add(child);
                         used_animals_list.addAll(animals_at_position);

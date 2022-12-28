@@ -18,7 +18,7 @@ public class Map {
     }
 
     public Vector2d getUpperRightVector() {
-        return new Vector2d(width, height);
+        return new Vector2d(width - 1, height - 1);
     }
 
     public boolean place(Animal animal) {
@@ -53,7 +53,7 @@ public class Map {
     }
 
     public boolean canMoveTo(Vector2d position) {
-        return position.follows(new Vector2d(0,0)) && position.precedes(new Vector2d(width,height));
+        return position.follows(getLowerLeftVector()) && position.precedes(getUpperRightVector());
     }
 
     public boolean isOccupied(Vector2d position) {

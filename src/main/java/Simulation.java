@@ -23,15 +23,29 @@ public class Simulation {
     private int cellWidth = 40;
     private int cellHeight = 40;
 
-    public void init() {
+    public void init(
+            int mapHeight,
+            int mapWidth,
+            int startingPlants,
+            int providedEnergy,
+            int growingPlants,
+            int startingAnimals,
+            int startingEnergy,
+            int breedReady,
+            int breedEnergy,
+            int mutationMinimum,
+            int mutationMaximum,
+            int genomeLength) {
 
-        map = new Map(10,10);
+        map = new Map(mapWidth, mapHeight);
 
-        engine = new SimulationEngine(this, map, plants);
+        engine = new SimulationEngine(this, map, plants, startingPlants, providedEnergy, growingPlants, startingAnimals, startingEnergy, breedReady, breedEnergy, mutationMinimum, mutationMaximum, genomeLength);
         engine.setDelay(200);
 
         Button startStopButton = new Button("Pause");
         startStopButton.setStyle("-fx-font-size: 18pt; -fx-padding: 5 20 5 20;");
+        HBox startStop = new HBox(startStopButton);
+        startStop.setAlignment(Pos.CENTER);
 
         startStopButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
@@ -45,11 +59,10 @@ public class Simulation {
                     startStopButton.setText("Pause");
                     engine.unpause();
                 }
-
             }
         });
 
-        vBox = new VBox(10, new Label(""), startStopButton);
+        vBox = new VBox(10, new Label(""), startStop);
 
     }
 
@@ -57,7 +70,7 @@ public class Simulation {
 
         renderGridPane();
 
-        Scene scene = new Scene(vBox, 600, 600);
+        Scene scene = new Scene(vBox, cellWidth * (map.getUpperRightVector().x + 2), cellHeight * (map.getUpperRightVector().y + 2) + 100);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Evolution Simulator");
