@@ -63,7 +63,7 @@ public class SimulationEngine implements IEngine, Runnable {
         spawnStartingAnimals(startingAnimals, startingEnergy);
 
         //spawn roslin na mapie z zasadą równika
-        addPlants(startingPlants);
+        startSpawnPlants(startingPlants);
     }
 
     public void setDelay(int delay) {
@@ -120,6 +120,27 @@ public class SimulationEngine implements IEngine, Runnable {
         }
     }
 
+    private void startSpawnPlants(int n_of_plants){
+        List<Vector2d> fields_xy = new ArrayList<>();
+
+        for (int x = map.getLowerLeftVector().x; x <= map.getUpperRightVector().x; x++) {
+            for (int y = map.getLowerLeftVector().x; y <= map.getUpperRightVector().y; y++) {
+                if(!plants.containsKey(new Vector2d(x,y))){
+                    fields_xy.add(new Vector2d(x,y));
+                }
+            }
+        }
+
+        int curr_counter=0;
+        while (curr_counter!=n_of_plants){
+            int new_place_xy = (int) ((Math.random() * fields_xy.size() ));
+            Vector2d xy=fields_xy.get(new_place_xy);
+            if(!plants.containsKey(xy)){
+                plants.put(xy,new Plant(xy));
+                curr_counter++;
+            }
+        }
+    }
     private void addPlants(int n_of_plants) { //mode 1 rownik mode 0 pola trupó
         List<Integer> preferable_fields_y = new ArrayList<>();
         int n_of_preferable_fields = (int) Math.round(map.getUpperRightVector().y * 0.2);
@@ -183,12 +204,13 @@ public class SimulationEngine implements IEngine, Runnable {
          }
 
 
-
         int onNotPreferable = (int) Math.ceil(0.2 * n_of_plants);
         int onPreferable = n_of_plants - onNotPreferable;
-
         int curr_spawn_counter = 0;
-        while(curr_spawn_counter != onNotPreferable  && not_preferable_fields_xy.size()!=0){
+        if(not_preferable_fields_xy.size()<onNotPreferable){
+            onNotPreferable=not_preferable_fields_xy.size();
+        }
+        while(curr_spawn_counter != onNotPreferable  && not_preferable_fields_xy.size()!=0 && not_preferable_fields_xy.size()>=onNotPreferable){
             int new_place_xy = (int) ((Math.random() * not_preferable_fields_xy.size() ));
             Vector2d xy = not_preferable_fields_xy.get(new_place_xy);
             if (!this.plants.containsKey(xy)) {
@@ -199,7 +221,10 @@ public class SimulationEngine implements IEngine, Runnable {
 
         curr_spawn_counter = 0;
 
-        while(curr_spawn_counter != onPreferable && preferable_fields_xy.size()!=0) {
+        if(preferable_fields_xy.size()<onPreferable){
+            onPreferable=preferable_fields_xy.size();
+        }
+        while(curr_spawn_counter != onPreferable && preferable_fields_xy.size()!=0 && preferable_fields_xy.size()>=onPreferable) {
             int new_place_xy = (int) ((Math.random() * preferable_fields_xy.size() ));
             Vector2d xy = preferable_fields_xy.get(new_place_xy);
                 if (!this.plants.containsKey(xy)) {
@@ -330,7 +355,8 @@ public class SimulationEngine implements IEngine, Runnable {
 
     private int[] mutate(int[] genome) {
         int max = genome.length;
-        int n_of_mutations = (int) ((Math.random() * max));
+        //int n_of_mutations = (int) ((Math.random() * max));
+        int n_of_mutations = (int) ((Math.random() * this.mutationMaximum-this.mutationMinimum)+this.mutationMinimum);
         int curr_counter=0;
         while (curr_counter != n_of_mutations) {
             if (randomnessVariant) {

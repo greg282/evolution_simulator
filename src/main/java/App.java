@@ -40,7 +40,7 @@ public class App extends Application {
         mapVariant.setSpacing(spacingValue);
         mapVariant.setAlignment(Pos.CENTER);
 
-        Label startingPlantsLabel = new Label("(dziala dla liczb <= 20) Starting number of plants:");
+        Label startingPlantsLabel = new Label("(dziala dla liczb <= width*height) Starting number of plants:");
         TextField startingPlantsInput = new TextField("10"); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
         HBox startingPlants = new HBox(startingPlantsLabel, startingPlantsInput);
         startingPlants.setSpacing(spacingValue);
@@ -58,7 +58,7 @@ public class App extends Application {
         growingPlants.setSpacing(spacingValue);
         growingPlants.setAlignment(Pos.CENTER);
 
-        Label plantsVariantLabel = new Label("(zaimplementowany tylko pierwszy) Plant growth variant:");
+        Label plantsVariantLabel = new Label("Plant growth variant:");
         ToggleGroup plantsVariantGroup = new ToggleGroup();
         RadioButton equators = new RadioButton("Forested equators");
         RadioButton corpses = new RadioButton("Toxic corpses");
@@ -93,14 +93,14 @@ public class App extends Application {
         breedEnergy.setSpacing(spacingValue);
         breedEnergy.setAlignment(Pos.CENTER);
 
-        Label mutationNumberLabel = new Label("(niezaimplementowane) Minimum and maximum number of mutations in children:");
+        Label mutationNumberLabel = new Label("Minimum and maximum number of mutations in children:");
         TextField mutationMinimumInput = new TextField("1"); //Sprawdzić czy mutationMinimumInput <= mutationMaximumInput!!!
         TextField mutationMaximumInput = new TextField("3"); //Sprawdzić czy mniejsza od długości genu!!!
         HBox mutationNumber = new HBox(mutationNumberLabel, mutationMinimumInput, mutationMaximumInput);
         mutationNumber.setSpacing(spacingValue);
         mutationNumber.setAlignment(Pos.CENTER);
 
-        Label mutationVariantLabel = new Label("(slight correction sie zawiesza) Mutation variant:");
+        Label mutationVariantLabel = new Label("Mutation variant:");
         ToggleGroup mutationVariantGroup = new ToggleGroup();
         RadioButton randomness = new RadioButton("Full randomness");
         RadioButton correction = new RadioButton("Slight correction");
