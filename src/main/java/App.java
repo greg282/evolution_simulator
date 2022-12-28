@@ -5,9 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -31,13 +29,19 @@ public class App extends Application {
         mapDimensions.setSpacing(spacingValue);
         mapDimensions.setAlignment(Pos.CENTER);
 
-        Label mapVariantLabel = new Label("/* Placeholder - Tutaj selektor wyboru wariantu mapy */");
-        HBox mapVariant = new HBox(mapVariantLabel);
+        Label mapVariantLabel = new Label("(niezaimplementowany) Map variant:");
+        ToggleGroup mapVariantGroup = new ToggleGroup();
+        RadioButton globe = new RadioButton("Globe");
+        RadioButton portal = new RadioButton("Hell's portal");
+        globe.setToggleGroup(mapVariantGroup);
+        portal.setToggleGroup(mapVariantGroup);
+        globe.setSelected(true);
+        HBox mapVariant = new HBox(mapVariantLabel, globe, portal);
         mapVariant.setSpacing(spacingValue);
         mapVariant.setAlignment(Pos.CENTER);
 
         Label startingPlantsLabel = new Label("(dziala dla liczb <= 20) Starting number of plants:");
-        TextField startingPlantsInput = new TextField("10");
+        TextField startingPlantsInput = new TextField("10"); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
         HBox startingPlants = new HBox(startingPlantsLabel, startingPlantsInput);
         startingPlants.setSpacing(spacingValue);
         startingPlants.setAlignment(Pos.CENTER);
@@ -49,13 +53,19 @@ public class App extends Application {
         providedEnergy.setAlignment(Pos.CENTER);
 
         Label growingPlantsLabel = new Label("(dziala dla liczb <= 4) Number of plants growing each day:");
-        TextField growingPlantsInput = new TextField("2");
+        TextField growingPlantsInput = new TextField("2"); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
         HBox growingPlants = new HBox(growingPlantsLabel, growingPlantsInput);
         growingPlants.setSpacing(spacingValue);
         growingPlants.setAlignment(Pos.CENTER);
 
-        Label plantsVariantLabel = new Label("/* Placeholder - Tutaj selektor wyboru wariantu wzrostu roslin */");
-        HBox plantsVariant = new HBox(plantsVariantLabel);
+        Label plantsVariantLabel = new Label("(zaimplementowany tylko pierwszy) Plant growth variant:");
+        ToggleGroup plantsVariantGroup = new ToggleGroup();
+        RadioButton equators = new RadioButton("Forested equators");
+        RadioButton corpses = new RadioButton("Toxic corpses");
+        equators.setToggleGroup(plantsVariantGroup);
+        corpses.setToggleGroup(plantsVariantGroup);
+        equators.setSelected(true);
+        HBox plantsVariant = new HBox(plantsVariantLabel, equators, corpses);
         plantsVariant.setSpacing(spacingValue);
         plantsVariant.setAlignment(Pos.CENTER);
 
@@ -84,25 +94,37 @@ public class App extends Application {
         breedEnergy.setAlignment(Pos.CENTER);
 
         Label mutationNumberLabel = new Label("(niezaimplementowane) Minimum and maximum number of mutations in children:");
-        TextField mutationMinimumInput = new TextField("1");
+        TextField mutationMinimumInput = new TextField("1"); //Sprawdzić czy mutationMinimumInput <= mutationMaximumInput!!!
         TextField mutationMaximumInput = new TextField("3"); //Sprawdzić czy mniejsza od długości genu!!!
         HBox mutationNumber = new HBox(mutationNumberLabel, mutationMinimumInput, mutationMaximumInput);
         mutationNumber.setSpacing(spacingValue);
         mutationNumber.setAlignment(Pos.CENTER);
 
-        Label mutationVariantLabel = new Label("/* Placeholder - Tutaj selektor wyboru wariantu mutacji */");
-        HBox mutationVariant = new HBox(mutationVariantLabel);
+        Label mutationVariantLabel = new Label("(slight correction sie zawiesza) Mutation variant:");
+        ToggleGroup mutationVariantGroup = new ToggleGroup();
+        RadioButton randomness = new RadioButton("Full randomness");
+        RadioButton correction = new RadioButton("Slight correction");
+        randomness.setToggleGroup(mutationVariantGroup);
+        correction.setToggleGroup(mutationVariantGroup);
+        randomness.setSelected(true);
+        HBox mutationVariant = new HBox(mutationVariantLabel, randomness, correction);
         mutationVariant.setSpacing(spacingValue);
         mutationVariant.setAlignment(Pos.CENTER);
 
-        Label genomeLengthLabel = new Label("(niezaimplementowane) Animal genome length:");
+        Label genomeLengthLabel = new Label("(dziala) Animal genome length:");
         TextField genomeLengthInput = new TextField("7");
         HBox genomeLength = new HBox(genomeLengthLabel, genomeLengthInput);
         genomeLength.setSpacing(spacingValue);
         genomeLength.setAlignment(Pos.CENTER);
 
-        Label behaviorVariantLabel = new Label("/* Placeholder - Tutaj selektor wyboru wariantu zachowania zwierzakow */");
-        HBox behaviorVariant = new HBox(behaviorVariantLabel);
+        Label behaviorVariantLabel = new Label("(dziala) Behavior variant:");
+        ToggleGroup behaviorVariantGroup = new ToggleGroup();
+        RadioButton predestination = new RadioButton("Full predestination");
+        RadioButton madness = new RadioButton("A bit of madness");
+        predestination.setToggleGroup(behaviorVariantGroup);
+        madness.setToggleGroup(behaviorVariantGroup);
+        predestination.setSelected(true);
+        HBox behaviorVariant = new HBox(behaviorVariantLabel, predestination, madness);
         behaviorVariant.setSpacing(spacingValue);
         behaviorVariant.setAlignment(Pos.CENTER);
 
@@ -177,7 +199,12 @@ public class App extends Application {
                             Integer.parseInt(breedEnergyInput.getText()),
                             Integer.parseInt(mutationMinimumInput.getText()),
                             Integer.parseInt(mutationMaximumInput.getText()),
-                            Integer.parseInt(genomeLengthInput.getText())
+                            Integer.parseInt(genomeLengthInput.getText()),
+                            globe.isSelected(),
+                            equators.isSelected(),
+                            randomness.isSelected(),
+                            predestination.isSelected()
+
                     );
                     simulation.start(new Stage());
                     invalidArgumentLabel.setText("");

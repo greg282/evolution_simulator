@@ -14,6 +14,11 @@ public class SimulationEngine implements IEngine, Runnable {
     private int mutationMaximum;
     private int genomeLength;
 
+    private boolean globeVariant;
+    private boolean equatorsVariant;
+    private boolean randomnessVariant;
+    private boolean predestinationVariant;
+
     private int delay = 0;
     private boolean paused = false;
 
@@ -30,7 +35,11 @@ public class SimulationEngine implements IEngine, Runnable {
             int breedEnergy,
             int mutationMinimum,
             int mutationMaximum,
-            int genomeLength) {
+            int genomeLength,
+            boolean globeVariant,
+            boolean equatorsVariant,
+            boolean randomnessVariant,
+            boolean predestinationVariant) {
 
         this.simulation = simulation;
         this.map = map;
@@ -42,6 +51,11 @@ public class SimulationEngine implements IEngine, Runnable {
         this.mutationMinimum = mutationMinimum;
         this.mutationMaximum = mutationMaximum;
         this.genomeLength = genomeLength;
+
+        this.globeVariant = globeVariant;
+        this.equatorsVariant = equatorsVariant;
+        this.randomnessVariant = randomnessVariant;
+        this.predestinationVariant = predestinationVariant;
 
         //spawn początkowych zwierząt
         spawnStartingAnimals(startingAnimals, startingEnergy);
@@ -85,7 +99,7 @@ public class SimulationEngine implements IEngine, Runnable {
 
                 //skręt i przemieszczenie każdego zwierzęcia
                 for (Animal animal: animals) {
-                    animal.move();
+                    animal.move(predestinationVariant);
                     animal.updateAge();
                 }
 
@@ -264,15 +278,15 @@ public class SimulationEngine implements IEngine, Runnable {
             new_genome.add(parent2.getGenome()[i]);
         }
 
-        return mutate(convertIntegers(new_genome),1); //mode okresla wariant symulacji
+        return mutate(convertIntegers(new_genome));
     }
 
-    private int[] mutate(int[] genome, int mode) { //mode 1 - full random mode 2 - korekta
+    private int[] mutate(int[] genome) {
         int max = genome.length;
         int n_of_mutations = (int) ((Math.random() * max));
         int curr_counter=0;
         while (curr_counter != n_of_mutations) {
-            if (mode == 1) {
+            if (randomnessVariant) {
                 genome[(int) ((Math.random() * max))] = (int) ((Math.random() * 8));
                 curr_counter++;
             }

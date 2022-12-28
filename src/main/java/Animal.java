@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Animal extends AbstractWorldMapElement {
@@ -30,12 +28,26 @@ public class Animal extends AbstractWorldMapElement {
         this.orientation = MapDirection.values()[random.nextInt(MapDirection.values().length)];
     }
 
-    void move() {
+    void move(boolean predestinationVariant) {
 
         orientation = orientation.rotate(genome[current]);
-        current++;
-        energy--;
-        if (current == genome.length) current = 0;
+
+        if (predestinationVariant) {
+            current++;
+            if (current == genome.length) current = 0;
+        }
+        else {
+            Random rand = new Random();
+            double probability = rand.nextDouble();
+
+            if (probability < 0.8) {
+                current++;
+                if (current == genome.length) current = 0;
+            } else {
+                Random rand2 = new Random();
+                current = rand2.nextInt(genome.length);
+            }
+        }
 
         Vector2d nextPosition = position.add(orientation.toUnitVector());
 
@@ -45,6 +57,7 @@ public class Animal extends AbstractWorldMapElement {
             map.place(this);
         }
 
+        energy--;
     }
 
     public int[] getGenome() {

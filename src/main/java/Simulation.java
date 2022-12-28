@@ -35,11 +35,32 @@ public class Simulation {
             int breedEnergy,
             int mutationMinimum,
             int mutationMaximum,
-            int genomeLength) {
+            int genomeLength,
+            boolean globeVariant,
+            boolean equatorsVariant,
+            boolean randomnessVariant,
+            boolean predestinationVariant) {
 
         map = new Map(mapWidth, mapHeight);
 
-        engine = new SimulationEngine(this, map, plants, startingPlants, providedEnergy, growingPlants, startingAnimals, startingEnergy, breedReady, breedEnergy, mutationMinimum, mutationMaximum, genomeLength);
+        engine = new SimulationEngine(
+                this,
+                map,
+                plants,
+                startingPlants,
+                providedEnergy,
+                growingPlants,
+                startingAnimals,
+                startingEnergy,
+                breedReady,
+                breedEnergy,
+                mutationMinimum,
+                mutationMaximum,
+                genomeLength,
+                globeVariant,
+                equatorsVariant,
+                randomnessVariant,
+                predestinationVariant);
         engine.setDelay(200);
 
         Button startStopButton = new Button("Pause");
