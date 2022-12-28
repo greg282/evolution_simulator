@@ -59,14 +59,14 @@ public class App extends Application {
         plantsVariant.setSpacing(spacingValue);
         plantsVariant.setAlignment(Pos.CENTER);
 
-        Label startingAnimalsLabel = new Label("(niezaimplementowane) Starting number of animals:");
-        TextField startingAnimalsInput = new TextField("2");
+        Label startingAnimalsLabel = new Label("(dziala) Starting number of animals:");
+        TextField startingAnimalsInput = new TextField("8");
         HBox startingAnimals = new HBox(startingAnimalsLabel, startingAnimalsInput);
         startingAnimals.setSpacing(spacingValue);
         startingAnimals.setAlignment(Pos.CENTER);
 
-        Label startingEnergyLabel = new Label("(niezaimplementowane) Starting animal energy:");
-        TextField startingEnergyInput = new TextField("10");
+        Label startingEnergyLabel = new Label("(dziala) Starting animal energy:");
+        TextField startingEnergyInput = new TextField("10"); //Sprawdzić czy mniejsza lub równa energii maksymalnej!!!
         HBox startingEnergy = new HBox(startingEnergyLabel, startingEnergyInput);
         startingEnergy.setSpacing(spacingValue);
         startingEnergy.setAlignment(Pos.CENTER);
@@ -178,8 +178,6 @@ public class App extends Application {
                             Integer.parseInt(mutationMinimumInput.getText()),
                             Integer.parseInt(mutationMaximumInput.getText()),
                             Integer.parseInt(genomeLengthInput.getText())
-
-
                     );
                     simulation.start(new Stage());
                     invalidArgumentLabel.setText("");

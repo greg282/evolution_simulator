@@ -2,8 +2,6 @@ import java.util.*;
 
 public class SimulationEngine implements IEngine, Runnable {
 
-
-
     private Map map;
     private Simulation simulation;
     private List<Animal> animals = new ArrayList<>();
@@ -14,6 +12,7 @@ public class SimulationEngine implements IEngine, Runnable {
     private int breedEnergy;
     private int mutationMinimum;
     private int mutationMaximum;
+    private int genomeLength;
 
     private int delay = 0;
     private boolean paused = false;
@@ -42,20 +41,13 @@ public class SimulationEngine implements IEngine, Runnable {
         this.breedEnergy = breedEnergy;
         this.mutationMinimum = mutationMinimum;
         this.mutationMaximum = mutationMaximum;
+        this.genomeLength = genomeLength;
 
-        //tutaj spawn początkowych zwierząt
-        //! liczba początkowych zwierząt określa zmienna startingAnimals, a wartosc poczatkowej energii zmienna startingEnergy !
+        //spawn początkowych zwierząt
+        spawnStartingAnimals(startingAnimals, startingEnergy);
 
-        Animal animal1 = new Animal(map, new Vector2d(1,1), new int[] {0}, 4);
-        animals.add(animal1);
-        map.place(animal1);
-
-        Animal animal2 = new Animal(map, new Vector2d(2,2), new int[] {1, 0, 5, 0, 4}, 10);
-        animals.add(animal2);
-        map.place(animal2);
-
-        addPlants(startingPlants); //spawn roslin na mapie z zasadą równika
-
+        //spawn roslin na mapie z zasadą równika
+        addPlants(startingPlants);
     }
 
     public void setDelay(int delay) {
@@ -105,10 +97,6 @@ public class SimulationEngine implements IEngine, Runnable {
 
                 //wzrastanie nowych roślin na wybranych polach mapy
                 addPlants(growingPlants);
-
-
-                Animal animal2 = new Animal(map, new Vector2d(2,2), new int[] {1, 0, 5, 0, 4}, 10);
-                if(map.place(animal2))  animals.add(animal2);
 
                 //refresh mapy
                 this.simulation.mapRefresh();
@@ -315,5 +303,31 @@ public class SimulationEngine implements IEngine, Runnable {
             ret[i] = integers.get(i);
         }
         return ret;
+    }
+
+    private void spawnStartingAnimals(int startingAnimals, int startingEnergy) {
+
+        for (int i=0; i < startingAnimals; i++) {
+            Animal animal = new Animal(map, getRandomPosition(), generateStartingGenome(), startingEnergy);
+            animals.add(animal);
+            map.place(animal);
+        }
+    }
+
+    private int[] generateStartingGenome() {
+
+        Random random = new Random();
+        int[] array = new int[genomeLength];
+        for (int i = 0; i < genomeLength; i++) {
+            array[i] = random.nextInt(8);
+        }
+        return array;
+    }
+
+    private Vector2d getRandomPosition() {
+        Random random = new Random();
+        int randomX = random.nextInt(map.getUpperRightVector().x + 1);
+        int randomY = random.nextInt(map.getUpperRightVector().y + 1);
+        return new Vector2d(randomX, randomY);
     }
 }
