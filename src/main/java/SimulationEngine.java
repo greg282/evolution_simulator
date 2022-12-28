@@ -6,6 +6,8 @@ public class SimulationEngine implements IEngine, Runnable {
     private Simulation simulation;
     private List<Animal> animals = new ArrayList<>();
     protected java.util.Map<Vector2d, Plant> plants;
+
+    private  List<Animal> dead_fields;
     private int plantEnergy;
     private int growingPlants;
     private int breedReady;
@@ -87,10 +89,11 @@ public class SimulationEngine implements IEngine, Runnable {
             }
 
             if (!paused) {
-
+                dead_fields=new ArrayList<>();
                 //usunięcie martwych zwierząt zwierząt z mapy
                 for (int i = 0; i < animals.size(); i++) {
                     if ( animals.get(i).energy == 0 ) {
+                        dead_fields.add(animals.get(i));
                         map.remove(animals.get(i));
                         animals.remove(animals.get(i));
                         i--;
@@ -108,7 +111,6 @@ public class SimulationEngine implements IEngine, Runnable {
 
                 //rozmnażanie się najedzonych zwierząt znajdujących się na tym samym polu
                 animalsMultiplication();
-
                 //wzrastanie nowych roślin na wybranych polach mapy
                 addPlants(growingPlants);
 
@@ -118,48 +120,90 @@ public class SimulationEngine implements IEngine, Runnable {
         }
     }
 
-    private void addPlants(int n_of_plants) { //narazie tylko wariant rownik bo nie mamy jeszcze martwych zwierząt
+    private void addPlants(int n_of_plants) { //mode 1 rownik mode 0 pola trupó
         List<Integer> preferable_fields_y = new ArrayList<>();
         int n_of_preferable_fields = (int) Math.round(map.getUpperRightVector().y * 0.2);
         int first_preferablefield = (int) Math.round((map.getUpperRightVector().y / 2) - (n_of_preferable_fields / 2));
 
-        for (int i = first_preferablefield; i <+ first_preferablefield + n_of_preferable_fields; i++) {
+        for (int i = first_preferablefield; i < first_preferablefield + n_of_preferable_fields; i++) {
             preferable_fields_y.add(i);
         }
+
+        List<Integer> preferable_fields_x = new ArrayList<>();
+
+        for (int i = map.getLowerLeftVector().x; i <= map.getUpperRightVector().x; i++) {
+            preferable_fields_x.add(i);
+        }
+
+        List<Vector2d> preferable_fields_xy = new ArrayList<>();
+
+        if( this.equatorsVariant) {//równik
+            for(Integer x : preferable_fields_x){
+                for (Integer y : preferable_fields_y){
+                    if(!plants.containsKey(new Vector2d(x,y))){
+                        preferable_fields_xy.add(new Vector2d(x,y));
+                    }
+                }
+            }
+        }else {
+            if( dead_fields != null) {
+                for(Animal animal : dead_fields){
+                    preferable_fields_xy.add(animal.getPosition());
+                }
+            }
+        }
+
+        List<Integer> not_preferable_fields_y = new ArrayList<>();
+        List<Vector2d> not_preferable_fields_xy = new ArrayList<>();
+
+        for (int i = map.getLowerLeftVector().y ; i <= map.getUpperRightVector().y ; i++){
+            if(this.equatorsVariant){
+                if(!preferable_fields_y.contains(i)){
+                    not_preferable_fields_y.add(i);
+                }
+            }else{
+                not_preferable_fields_y.add(i);
+            }
+        }
+
+        for(Integer x : preferable_fields_x){
+            for (Integer y : not_preferable_fields_y){
+                if(this.equatorsVariant){
+                    if(!plants.containsKey(new Vector2d(x,y))){
+                        not_preferable_fields_xy.add(new Vector2d(x,y));
+                    }
+                }else {
+                    if(!plants.containsKey(new Vector2d(x,y)) && !preferable_fields_xy.contains(new Vector2d(x,y))){
+                        not_preferable_fields_xy.add(new Vector2d(x,y));
+                    }
+                }
+
+
+            }
+         }
+
+
 
         int onNotPreferable = (int) Math.ceil(0.2 * n_of_plants);
         int onPreferable = n_of_plants - onNotPreferable;
 
         int curr_spawn_counter = 0;
-
-        int max_x = map.getUpperRightVector().x + 1;
-        int min_x = map.getLowerLeftVector().x;
-
-        int max_y_not_preferable = map.getUpperRightVector().y+1;
-        int min_y_not_preferable = map.getLowerLeftVector().y;
-
-        int max_y_preferable = preferable_fields_y.size();
-        int min_y_preferable = 0;
-
-        while(curr_spawn_counter != onNotPreferable){
-            int new_place_y = (int) ((Math.random() * (max_y_not_preferable - min_y_not_preferable)) + min_y_not_preferable);
-            if (!preferable_fields_y.contains(new_place_y)) {
-                int new_place_x = (int) ((Math.random() * (max_x - min_x)) + min_x);
-                if (!this.plants.containsKey(new Vector2d(new_place_x, new_place_y))) {
-                    this.plants.put(new Vector2d(new_place_x,new_place_y), new Plant(new Vector2d(new_place_x, new_place_y)));
-                    curr_spawn_counter++;
-                }
+        while(curr_spawn_counter != onNotPreferable  && not_preferable_fields_xy.size()!=0){
+            int new_place_xy = (int) ((Math.random() * not_preferable_fields_xy.size() ));
+            Vector2d xy = not_preferable_fields_xy.get(new_place_xy);
+            if (!this.plants.containsKey(xy)) {
+                this.plants.put(xy, new Plant(xy));
+                curr_spawn_counter++;
             }
         }
 
         curr_spawn_counter = 0;
 
-        while(curr_spawn_counter != onPreferable) {
-            int new_place_y = (int) ((Math.random() * (max_y_preferable - min_y_preferable)) + min_y_preferable);
-            new_place_y = preferable_fields_y.get(new_place_y);
-                int new_place_x = (int) ((Math.random() * (max_x - min_x)) + min_x);
-                if (!this.plants.containsKey(new Vector2d(new_place_x, new_place_y))) {
-                    this.plants.put(new Vector2d(new_place_x, new_place_y), new Plant(new Vector2d(new_place_x, new_place_y)));
+        while(curr_spawn_counter != onPreferable && preferable_fields_xy.size()!=0) {
+            int new_place_xy = (int) ((Math.random() * preferable_fields_xy.size() ));
+            Vector2d xy = preferable_fields_xy.get(new_place_xy);
+                if (!this.plants.containsKey(xy)) {
+                    this.plants.put(xy, new Plant(xy));
                     curr_spawn_counter++;
                 }
         }
@@ -274,6 +318,9 @@ public class SimulationEngine implements IEngine, Runnable {
         }
 
         range = parent2.getGenome().length - 1 - (int) Math.round(parent2.getGenome().length * percent_of_parent2);
+        if(range<0){
+            range=0;
+        }
         for (int i=parent2.getGenome().length-1;i>=range;i--) {
             new_genome.add(parent2.getGenome()[i]);
         }
@@ -291,12 +338,14 @@ public class SimulationEngine implements IEngine, Runnable {
                 curr_counter++;
             }
             else {
-                if ((int)(Math.random() * 2) == 1) {
+                int mode=(int)(Math.random() * 2);
+                if (mode == 1) {
                     int index = (int) ((Math.random() * max));
                     genome[index]++;
                     if (genome[index]>7){
                         genome[index]=0;
                     }
+
                 }
                 else {
                     int index=(int) ((Math.random() * max));
@@ -305,6 +354,7 @@ public class SimulationEngine implements IEngine, Runnable {
                         genome[index]=7;
                     }
                 }
+                curr_counter++;
             }
         }
         return genome;
