@@ -16,7 +16,7 @@ public class Simulation {
 
     private SimulationEngine engine;
     private Map map;
-
+    private int startingEnergy;
     protected java.util.Map<Vector2d, Plant> plants = new HashMap<>();
     private VBox vBox;
 
@@ -40,6 +40,8 @@ public class Simulation {
             boolean equatorsVariant,
             boolean randomnessVariant,
             boolean predestinationVariant) {
+
+        this.startingEnergy=startingEnergy;
 
         map = new Map(mapWidth, mapHeight);
 
@@ -142,7 +144,7 @@ public class Simulation {
 
                     if ( map.isOccupied(new Vector2d(i,j)) ) {
 
-                        double colorValue = (double) map.animalAt( new Vector2d(i,j) ).energy / 10;
+                        double colorValue = (double) map.animalAt( new Vector2d(i,j) ).energy / this.startingEnergy;
                         Circle circle = new Circle(15);
                         circle.setFill(javafx.scene.paint.Color.color(1-colorValue, 1-colorValue, 1-colorValue));
                         elementBox = new VBox(circle);
