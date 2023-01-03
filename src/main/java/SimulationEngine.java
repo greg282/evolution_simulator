@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class SimulationEngine implements IEngine, Runnable {
@@ -8,6 +12,7 @@ public class SimulationEngine implements IEngine, Runnable {
     protected java.util.Map<Vector2d, Plant> plants;
 
     private  List<Animal> dead_fields;
+
     private int plantEnergy;
     private int growingPlants;
     private int breedReady;
@@ -86,9 +91,23 @@ public class SimulationEngine implements IEngine, Runnable {
     }
 
     public void run() {
+        int day=0;
+        int total_dead_animals=0;
+        int total_dead_animals_age = 0;
+        Date now = new Date();
+
+        File file = new File("sim_stats"+now.getYear()+now.getMonth()+now.getDay()+now.getTime()+".csv");
+
+
+        try {
+            writeHeader(file);
+        } catch (IOException exception) {
+            System.out.println("Simulation stopped");
+        }
+
 
         while (true) {
-
+            day++;
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException exception) {
@@ -100,6 +119,10 @@ public class SimulationEngine implements IEngine, Runnable {
                 //usunięcie martwych zwierząt zwierząt z mapy
                 for (int i = 0; i < animals.size(); i++) {
                     if ( animals.get(i).energy == 0 ) {
+                        //generowanie statystyk
+                        total_dead_animals_age=animals.get(i).getAge();
+                        total_dead_animals++;
+                        /////////////////////
                         dead_fields.add(animals.get(i));
                         map.remove(animals.get(i));
                         animals.remove(animals.get(i));
@@ -107,6 +130,7 @@ public class SimulationEngine implements IEngine, Runnable {
                     }
                 }
 
+                ////////////////////////////////////////////
                 //skręt i przemieszczenie każdego zwierzęcia
                 for (Animal animal: animals) {
                     animal.move(predestinationVariant);
@@ -121,6 +145,20 @@ public class SimulationEngine implements IEngine, Runnable {
                 //wzrastanie nowych roślin na wybranych polach mapy
                 addPlants(growingPlants);
 
+                ///////////////////////////Statystyki symulacji
+                DayStat dayStat=null;//zawiera statystyki dotyczące danego dnia
+                if(total_dead_animals==0){
+                    dayStat=generateDayStatistic(day,0);
+                }
+                else {
+                   dayStat=generateDayStatistic(day,(double)total_dead_animals_age/total_dead_animals);
+                }
+
+                try {
+                    dayStat.writeToFile(file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 //refresh mapy
                 this.simulation.mapRefresh();
             }
@@ -432,4 +470,27 @@ public class SimulationEngine implements IEngine, Runnable {
         int randomY = random.nextInt(map.getUpperRightVector().y + 1);
         return new Vector2d(randomX, randomY);
     }
+
+    private DayStat generateDayStatistic(int day,double dead_animal_avg_lifespan){
+        DayStat dayStat = new DayStat();
+        dayStat.setDay(day);
+        dayStat.setTotal_animals(animals.size());
+        double avg_energy=0;
+        for(Animal animal:animals){
+            avg_energy+=animal.energy;
+        }
+        avg_energy=avg_energy/animals.size();
+        dayStat.setAvg_energy(avg_energy);
+        dayStat.setTotal_plants(plants.size());
+        dayStat.setFree_fields((map.getUpperRightVector().x*map.getUpperRightVector().y)-animals.size()-plants.size());
+        dayStat.setAvg_lifespan_of_dead(dead_animal_avg_lifespan);
+
+        return dayStat;
+    }
+    private void writeHeader(File file) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+        writer.append("Day,Total_animals,Total_plants,Free_fields,Avg_energy,Avg_lifespan_of_dead");
+        writer.close();
+    }
+
 }
