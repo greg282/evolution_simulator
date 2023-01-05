@@ -18,18 +18,17 @@ public class App extends Application {
         //?dodać jungle height i width?
         //?dodać daily energy cost?
         //?dodać refresh time (ms)?
-        //?dodać energię maksymalną zwierzęcia?
 
         int spacingValue = 10;
 
-        Label mapDimensionsLabel = new Label("(dziala dla 8x8 lub wiekszych map) Map height and width:");
+        Label mapDimensionsLabel = new Label("Map height and width:");
         TextField mapHeightInput = new TextField("10");
         TextField mapWidthInput = new TextField("10");
         HBox mapDimensions = new HBox(mapDimensionsLabel, mapHeightInput, mapWidthInput);
         mapDimensions.setSpacing(spacingValue);
         mapDimensions.setAlignment(Pos.CENTER);
 
-        Label mapVariantLabel = new Label("(niezaimplementowany) Map variant:");
+        Label mapVariantLabel = new Label("Map variant:");
         ToggleGroup mapVariantGroup = new ToggleGroup();
         RadioButton globe = new RadioButton("Globe");
         RadioButton portal = new RadioButton("Hell's portal");
@@ -40,19 +39,19 @@ public class App extends Application {
         mapVariant.setSpacing(spacingValue);
         mapVariant.setAlignment(Pos.CENTER);
 
-        Label startingPlantsLabel = new Label("(dziala dla liczb <= width*height) Starting number of plants:");
+        Label startingPlantsLabel = new Label("Starting number of plants:");
         TextField startingPlantsInput = new TextField("10"); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
         HBox startingPlants = new HBox(startingPlantsLabel, startingPlantsInput);
         startingPlants.setSpacing(spacingValue);
         startingPlants.setAlignment(Pos.CENTER);
 
-        Label providedEnergyLabel = new Label("(dziala) Energy provided by eating one plant:");
+        Label providedEnergyLabel = new Label("Energy provided by eating one plant:");
         TextField providedEnergyInput = new TextField("4");
         HBox providedEnergy = new HBox(providedEnergyLabel, providedEnergyInput);
         providedEnergy.setSpacing(spacingValue);
         providedEnergy.setAlignment(Pos.CENTER);
 
-        Label growingPlantsLabel = new Label("(dziala dla liczb <= 4) Number of plants growing each day:");
+        Label growingPlantsLabel = new Label("Number of plants growing each day:");
         TextField growingPlantsInput = new TextField("2"); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
         HBox growingPlants = new HBox(growingPlantsLabel, growingPlantsInput);
         growingPlants.setSpacing(spacingValue);
@@ -69,13 +68,13 @@ public class App extends Application {
         plantsVariant.setSpacing(spacingValue);
         plantsVariant.setAlignment(Pos.CENTER);
 
-        Label startingAnimalsLabel = new Label("(dziala) Starting number of animals:");
+        Label startingAnimalsLabel = new Label("Starting number of animals:");
         TextField startingAnimalsInput = new TextField("8");
         HBox startingAnimals = new HBox(startingAnimalsLabel, startingAnimalsInput);
         startingAnimals.setSpacing(spacingValue);
         startingAnimals.setAlignment(Pos.CENTER);
 
-        Label startingEnergyLabel = new Label("(dziala) Starting animal energy:");
+        Label startingEnergyLabel = new Label("Starting animal energy:");
         TextField startingEnergyInput = new TextField("10"); //Sprawdzić czy mniejsza lub równa energii maksymalnej!!!
         HBox startingEnergy = new HBox(startingEnergyLabel, startingEnergyInput);
         startingEnergy.setSpacing(spacingValue);
@@ -87,13 +86,13 @@ public class App extends Application {
         maxEnergy.setSpacing(spacingValue);
         maxEnergy.setAlignment(Pos.CENTER);
 
-        Label breedReadyLabel = new Label("(dziala dla liczb >= 3) Energy needed to consider animal ready to breed:");
+        Label breedReadyLabel = new Label("Energy needed to consider animal ready to breed:");
         TextField breedReadyInput = new TextField("5");
         HBox breedReady = new HBox(breedReadyLabel, breedReadyInput);
         breedReady.setSpacing(spacingValue);
         breedReady.setAlignment(Pos.CENTER);
 
-        Label breedEnergyLabel = new Label("(dziala dla liczb <= 4) Energy of the parents used during breed:");
+        Label breedEnergyLabel = new Label("Energy of the parents used during breed:");
         TextField breedEnergyInput = new TextField("2"); //Sprawdzić czy mniejsza lub równa od breedReady!!!
         HBox breedEnergy = new HBox(breedEnergyLabel, breedEnergyInput);
         breedEnergy.setSpacing(spacingValue);
@@ -117,13 +116,13 @@ public class App extends Application {
         mutationVariant.setSpacing(spacingValue);
         mutationVariant.setAlignment(Pos.CENTER);
 
-        Label genomeLengthLabel = new Label("(dziala) Animal genome length:");
+        Label genomeLengthLabel = new Label("Animal genome length:");
         TextField genomeLengthInput = new TextField("7");
         HBox genomeLength = new HBox(genomeLengthLabel, genomeLengthInput);
         genomeLength.setSpacing(spacingValue);
         genomeLength.setAlignment(Pos.CENTER);
 
-        Label behaviorVariantLabel = new Label("(dziala) Behavior variant:");
+        Label behaviorVariantLabel = new Label("Behavior variant:");
         ToggleGroup behaviorVariantGroup = new ToggleGroup();
         RadioButton predestination = new RadioButton("Full predestination");
         RadioButton madness = new RadioButton("A bit of madness");

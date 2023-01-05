@@ -28,9 +28,10 @@ public class Animal extends AbstractWorldMapElement {
         this.orientation = MapDirection.values()[random.nextInt(MapDirection.values().length)];
     }
 
-    void move(boolean predestinationVariant) {
+    void move(boolean predestinationVariant, boolean globeVariant, int teleportEnergy) {
 
         orientation = orientation.rotate(genome[current]);
+        energy--;
 
         if (predestinationVariant) {
             current++;
@@ -51,13 +52,25 @@ public class Animal extends AbstractWorldMapElement {
 
         Vector2d nextPosition = position.add(orientation.toUnitVector());
 
-        if (map.canMoveTo(nextPosition)) {
-            map.remove(this);
-            this.position = nextPosition;
-            map.place(this);
+        if (!map.canMoveTo(nextPosition)) {
+            if (globeVariant) {
+                if (nextPosition.x < map.getLowerLeftVector().x) nextPosition.x = map.getUpperRightVector().x;
+                if (nextPosition.x > map.getUpperRightVector().x) nextPosition.x = map.getLowerLeftVector().x;
+                if (nextPosition.y < map.getLowerLeftVector().y || nextPosition.y > map.getUpperRightVector().y) {
+                    nextPosition.y = position.y;
+                    orientation.rotate(4);
+                }
+            }
+            else {
+                energy -= teleportEnergy;
+                if (energy < 0) energy = 0;
+                nextPosition = map.getRandomPosition();
+            }
         }
 
-        energy--;
+        map.remove(this);
+        this.position = nextPosition;
+        map.place(this);
     }
 
     public int[] getGenome() {

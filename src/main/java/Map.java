@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Map {
     private int width;
@@ -19,6 +20,13 @@ public class Map {
 
     public Vector2d getUpperRightVector() {
         return new Vector2d(width - 1, height - 1);
+    }
+
+    public Vector2d getRandomPosition() {
+        Random random = new Random();
+        int randomX = random.nextInt(getUpperRightVector().x + 1);
+        int randomY = random.nextInt(getUpperRightVector().y + 1);
+        return new Vector2d(randomX, randomY);
     }
 
     public boolean place(Animal animal) {

@@ -133,7 +133,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 ////////////////////////////////////////////
                 //skręt i przemieszczenie każdego zwierzęcia
                 for (Animal animal: animals) {
-                    animal.move(predestinationVariant);
+                    animal.move(predestinationVariant, globeVariant, breedEnergy);
                     animal.updateAge();
                 }
 
@@ -448,7 +448,7 @@ public class SimulationEngine implements IEngine, Runnable {
     private void spawnStartingAnimals(int startingAnimals, int startingEnergy) {
 
         for (int i=0; i < startingAnimals; i++) {
-            Animal animal = new Animal(map, getRandomPosition(), generateStartingGenome(), startingEnergy);
+            Animal animal = new Animal(map, map.getRandomPosition(), generateStartingGenome(), startingEnergy);
             animals.add(animal);
             map.place(animal);
         }
@@ -462,13 +462,6 @@ public class SimulationEngine implements IEngine, Runnable {
             array[i] = random.nextInt(8);
         }
         return array;
-    }
-
-    private Vector2d getRandomPosition() {
-        Random random = new Random();
-        int randomX = random.nextInt(map.getUpperRightVector().x + 1);
-        int randomY = random.nextInt(map.getUpperRightVector().y + 1);
-        return new Vector2d(randomX, randomY);
     }
 
     private DayStat generateDayStatistic(int day,double dead_animal_avg_lifespan){
