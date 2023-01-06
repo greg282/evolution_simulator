@@ -24,18 +24,18 @@ public class App extends Application {
     TextField mapWidthInput = new TextField();
     RadioButton globe = new RadioButton("Globe");
     RadioButton portal = new RadioButton("Hell's portal");
-    TextField startingPlantsInput = new TextField(); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
+    TextField startingPlantsInput = new TextField();
     TextField providedEnergyInput = new TextField();
-    TextField growingPlantsInput = new TextField(); //Sprawdzić czy mniejsza lub równa liczbie wszystkich pól na mapie!!!
+    TextField growingPlantsInput = new TextField();
     RadioButton equators = new RadioButton("Forested equators");
     RadioButton corpses = new RadioButton("Toxic corpses");
     TextField startingAnimalsInput = new TextField();
-    TextField startingEnergyInput = new TextField(); //Sprawdzić czy mniejsza lub równa energii maksymalnej!!!
+    TextField startingEnergyInput = new TextField();
     TextField maxEnergyInput = new TextField();
     TextField breedReadyInput = new TextField();
-    TextField breedEnergyInput = new TextField(); //Sprawdzić czy mniejsza lub równa od breedReady!!!
-    TextField mutationMinimumInput = new TextField(); //Sprawdzić czy mutationMinimumInput <= mutationMaximumInput!!!
-    TextField mutationMaximumInput = new TextField(); //Sprawdzić czy mniejsza od długości genu!!!
+    TextField breedEnergyInput = new TextField();
+    TextField mutationMinimumInput = new TextField();
+    TextField mutationMaximumInput = new TextField();
     RadioButton randomness = new RadioButton("Full randomness");
     RadioButton correction = new RadioButton("Slight correction");
     TextField genomeLengthInput = new TextField();
@@ -62,31 +62,14 @@ public class App extends Application {
         config.setSpacing(spacingValue);
         config.setAlignment(Pos.CENTER);
 
+        configNormal.setOnAction(e -> loadConfig("configNormal.json"));
+        configChaos.setOnAction(e -> loadConfig("configChaos.json"));
+        configBigMap.setOnAction(e -> loadConfig("configBigMap.json"));
+
         Label configAlternativeLabel = new Label("...or set alternative configuration:");
         configAlternativeLabel.setStyle("-fx-font-size: 15pt; -fx-font-weight: bold");
         HBox configAlternative = new HBox(configAlternativeLabel);
         configAlternative.setAlignment(Pos.CENTER);
-
-        configNormal.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                loadConfig("configNormal.json");
-            }
-        });
-
-        configChaos.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                loadConfig("configChaos.json");
-            }
-        });
-
-        configBigMap.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                loadConfig("configBigMap.json");
-            }
-        });
-
-        //?dodać jungle height i width?
-        //?dodać daily energy cost?
 
         Label mapDimensionsLabel = new Label("Map height and width:");
         HBox mapDimensions = new HBox(mapDimensionsLabel, mapHeightInput, mapWidthInput);
@@ -106,7 +89,7 @@ public class App extends Application {
         startingPlants.setSpacing(spacingValue);
         startingPlants.setAlignment(Pos.CENTER);
 
-        Label providedEnergyLabel = new Label("Energy provided by eating one plant:");
+        Label providedEnergyLabel = new Label("Energy provided by eating plant:");
         HBox providedEnergy = new HBox(providedEnergyLabel, providedEnergyInput);
         providedEnergy.setSpacing(spacingValue);
         providedEnergy.setAlignment(Pos.CENTER);
@@ -134,7 +117,7 @@ public class App extends Application {
         startingEnergy.setSpacing(spacingValue);
         startingEnergy.setAlignment(Pos.CENTER);
 
-        Label maxEnergyLabel = new Label("Max animal energy:");
+        Label maxEnergyLabel = new Label("Maximum animal energy:");
         HBox maxEnergy = new HBox(maxEnergyLabel, maxEnergyInput);
         maxEnergy.setSpacing(spacingValue);
         maxEnergy.setAlignment(Pos.CENTER);
@@ -229,22 +212,51 @@ public class App extends Application {
             public void handle(ActionEvent e) {
 
                 try {
-                    if (Integer.parseInt(mapHeightInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(mapWidthInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(startingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
-                    if (Integer.parseInt(providedEnergyInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
-                    if (Integer.parseInt(growingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
-                    if (Integer.parseInt(startingAnimalsInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
-                    if (Integer.parseInt(startingEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(startingEnergyInput.getText()) > Integer.parseInt(maxEnergyInput.getText())) throw new IllegalArgumentException("Starting energy bigger than max energy");
-                    if (Integer.parseInt(maxEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(breedReadyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(breedEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(breedEnergyInput.getText()) > Integer.parseInt(breedReadyInput.getText())) throw new IllegalArgumentException("Error: breedEnergy bigger than breedReady");
-                    if (Integer.parseInt(mutationMinimumInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
-                    if (Integer.parseInt(mutationMaximumInput.getText()) < 0) throw new IllegalArgumentException("Integer less than zero");
-                    if (Integer.parseInt(genomeLengthInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
-                    if (Integer.parseInt(refreshTimeInput.getText()) <= 0) throw new IllegalArgumentException("Integer less than or equal to zero");
+
+                    // looking for empty textFields and ToggleGroups
+                    if (mapHeightInput.getText().isEmpty()) throw new IllegalArgumentException("'Map height' text field is empty!");
+                    if (mapWidthInput.getText().isEmpty()) throw new IllegalArgumentException("'Map width' text field is empty!");
+                    if (mapVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Map variant was not selected!");
+                    if (startingPlantsInput.getText().isEmpty()) throw new IllegalArgumentException("'Starting number of plants' text field is empty!");
+                    if (providedEnergyInput.getText().isEmpty()) throw new IllegalArgumentException("'Energy provided by eating' plant text field is empty!");
+                    if (growingPlantsInput.getText().isEmpty()) throw new IllegalArgumentException("'Number of plants growing each day' text field is empty!");
+                    if (plantsVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Plant growth variant was not selected!");
+                    if (startingAnimalsInput.getText().isEmpty()) throw new IllegalArgumentException("'Starting number of animals' text field is empty!");
+                    if (startingEnergyInput.getText().isEmpty()) throw new IllegalArgumentException("'Starting animal energy' text field is empty!");
+                    if (maxEnergyInput.getText().isEmpty()) throw new IllegalArgumentException("'Maximum animal energy' text field is empty!");
+                    if (breedReadyInput.getText().isEmpty()) throw new IllegalArgumentException("'Energy needed to consider animal ready to breed' text field is empty!");
+                    if (breedEnergyInput.getText().isEmpty()) throw new IllegalArgumentException("'Energy of the parents used during breed' text field is empty!");
+                    if (mutationMinimumInput.getText().isEmpty()) throw new IllegalArgumentException("'Minimum number of mutations' text field is empty!");
+                    if (mutationMaximumInput.getText().isEmpty()) throw new IllegalArgumentException("'Maximum number of mutations' text field is empty!");
+                    if (mutationVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Mutation variant was not selected!");
+                    if (genomeLengthInput.getText().isEmpty()) throw new IllegalArgumentException("'Animal genome length' text field is empty!");
+                    if (behaviorVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Behavior variant was not selected!");
+                    if (refreshTimeInput.getText().isEmpty()) throw new IllegalArgumentException("'Refresh time' text field is empty!");
+
+                    // checking if a number is above the lower bounds
+                    if (Integer.parseInt(mapHeightInput.getText()) <= 0) throw new IllegalArgumentException("Map height is less than or equal to zero");
+                    if (Integer.parseInt(mapWidthInput.getText()) <= 0) throw new IllegalArgumentException("Map width is less than or equal to zero");
+                    if (Integer.parseInt(startingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Starting number of plants is less than zero");
+                    if (Integer.parseInt(providedEnergyInput.getText()) < 0) throw new IllegalArgumentException("Energy provided by eating is less than zero");
+                    if (Integer.parseInt(growingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Number of plants growing each day is less than zero");
+                    if (Integer.parseInt(startingAnimalsInput.getText()) < 0) throw new IllegalArgumentException("Starting number of animals is less than zero");
+                    if (Integer.parseInt(startingEnergyInput.getText()) < 0) throw new IllegalArgumentException("Starting animal energy is less than zero");
+                    if (Integer.parseInt(maxEnergyInput.getText()) < 0) throw new IllegalArgumentException("Maximum animal energy is less than zero");
+                    if (Integer.parseInt(breedReadyInput.getText()) <= 0) throw new IllegalArgumentException("Energy needed to consider animal ready to breed is less than or equal to zero");
+                    if (Integer.parseInt(breedEnergyInput.getText()) <= 0) throw new IllegalArgumentException("Energy of the parents used during breed is less than or equal to zero");
+                    if (Integer.parseInt(mutationMinimumInput.getText()) < 0) throw new IllegalArgumentException("Minimum number of mutations is less than zero");
+                    if (Integer.parseInt(mutationMaximumInput.getText()) < 0) throw new IllegalArgumentException("Maximum number of mutations is less than zero");
+                    if (Integer.parseInt(genomeLengthInput.getText()) <= 0) throw new IllegalArgumentException("Animal genome length is less than or equal to zero");
+                    if (Integer.parseInt(refreshTimeInput.getText()) <= 0) throw new IllegalArgumentException("Refresh time is less than or equal to zero");
+
+                    // checking relations between parameters
+                    if (Integer.parseInt(startingPlantsInput.getText()) > Integer.parseInt(mapHeightInput.getText()) * Integer.parseInt(mapWidthInput.getText())) throw new IllegalArgumentException("Starting number of plants is bigger than number of all map fields");
+                    if (Integer.parseInt(growingPlantsInput.getText()) > Integer.parseInt(mapHeightInput.getText()) * Integer.parseInt(mapWidthInput.getText())) throw new IllegalArgumentException("Number of plants growing each day is bigger than number of all map fields");
+                    if (Integer.parseInt(startingEnergyInput.getText()) > Integer.parseInt(maxEnergyInput.getText())) throw new IllegalArgumentException("Starting animal energy is bigger than maximum animal energy");
+                    if (Integer.parseInt(breedReadyInput.getText()) > Integer.parseInt(maxEnergyInput.getText())) throw new IllegalArgumentException("Energy needed to consider animal ready to breed is bigger than maximum animal energy");
+                    if (Integer.parseInt(breedEnergyInput.getText()) > Integer.parseInt(breedReadyInput.getText())) throw new IllegalArgumentException("Energy of the parents used during breed is bigger than energy needed to consider animal ready to breed");
+                    if (Integer.parseInt(mutationMinimumInput.getText()) > Integer.parseInt(mutationMaximumInput.getText())) throw new IllegalArgumentException("Minimum number of mutations is bigger than maximum number of mutations");
+                    if (Integer.parseInt(mutationMaximumInput.getText()) > Integer.parseInt(genomeLengthInput.getText())) throw new IllegalArgumentException("Maximum number of mutations is bigger than animal genome length");
 
                     Simulation simulation = new Simulation();
                     simulation.init(
@@ -273,13 +285,12 @@ public class App extends Application {
 
                 }  catch (NumberFormatException exception) {
                     System.out.println("Could not convert string to integer");
-                    invalidArgumentLabel.setText("Invalid argument! A text was given instead of a number");
+                    invalidArgumentLabel.setText("Invalid argument(s)! A text was given instead of a number");
                     invalidArgumentLabel.setTextFill(Color.RED);
-                    exception.printStackTrace();
 
                 } catch (IllegalArgumentException exception) {
                     System.out.println(exception.getMessage());
-                    invalidArgumentLabel.setText("Invalid argument! " + exception.getMessage());
+                    invalidArgumentLabel.setText(exception.getMessage());
                     invalidArgumentLabel.setTextFill(Color.RED);
                 }
             }
@@ -287,6 +298,7 @@ public class App extends Application {
 
     }
 
+    // function that loads a predefined simulation configuration from a .json file
     private void loadConfig(String configFilename) {
         try {
 
