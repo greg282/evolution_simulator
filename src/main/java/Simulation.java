@@ -31,6 +31,7 @@ public class Simulation {
             int growingPlants,
             int startingAnimals,
             int startingEnergy,
+            int maxEnergy,
             int breedReady,
             int breedEnergy,
             int mutationMinimum,
@@ -40,9 +41,8 @@ public class Simulation {
             boolean equatorsVariant,
             boolean randomnessVariant,
             boolean predestinationVariant,
-            int maxEnergy
-            ) {
-
+            int refreshTime
+    ) {
         this.maxEnergy=maxEnergy;
 
         map = new Map(mapWidth, mapHeight);
@@ -56,6 +56,7 @@ public class Simulation {
                 growingPlants,
                 startingAnimals,
                 startingEnergy,
+                maxEnergy,
                 breedReady,
                 breedEnergy,
                 mutationMinimum,
@@ -64,9 +65,9 @@ public class Simulation {
                 globeVariant,
                 equatorsVariant,
                 randomnessVariant,
-                predestinationVariant,
-                maxEnergy);
-        engine.setDelay(200);
+                predestinationVariant
+        );
+        engine.setDelay(refreshTime);
 
         Button startStopButton = new Button("Pause");
         startStopButton.setStyle("-fx-font-size: 18pt; -fx-padding: 5 20 5 20;");

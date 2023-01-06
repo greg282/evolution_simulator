@@ -41,6 +41,7 @@ public class SimulationEngine implements IEngine, Runnable {
             int growingPlants,
             int startingAnimals,
             int startingEnergy,
+            int maxEnergy,
             int breedReady,
             int breedEnergy,
             int mutationMinimum,
@@ -49,11 +50,8 @@ public class SimulationEngine implements IEngine, Runnable {
             boolean globeVariant,
             boolean equatorsVariant,
             boolean randomnessVariant,
-            boolean predestinationVariant,
-            int maxEnergy
-
-            ) {
-
+            boolean predestinationVariant
+    ) {
         this.simulation = simulation;
         this.map = map;
         this.plants = plants_map;

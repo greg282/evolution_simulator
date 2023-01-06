@@ -1,0 +1,34 @@
+{
+    "map": {
+        "dimensions": {
+            "height": "23",
+            "width": "40"
+        },
+        "variant": "globe"
+    },
+    "plants": {
+        "startingNumber": "100",
+        "energyProvided": "4",
+        "growingEachDay": "20",
+        "growthVariant": "equators"
+    },
+    "animals": {
+        "startingNumber": "8",
+        "startingEnergy": "30",
+        "maxEnergy": "30",
+        "breed": {
+            "energyRequire": "5",
+            "energyUsed": "2"
+        },
+        "mutations": {
+            "minimum": "1",
+            "maximum": "3",
+            "variant": "randomness"
+        },
+        "genomeLength": "7",
+        "behaviourVariant": "predestination"
+    },
+    "other": {
+        "refreshTime": "100"
+    }
+}
