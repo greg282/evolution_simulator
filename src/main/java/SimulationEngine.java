@@ -142,7 +142,6 @@ public class SimulationEngine implements IEngine, Runnable {
                 animalsMultiplication();
                 //wzrastanie nowych roślin na wybranych polach mapy
                 addPlants(growingPlants);
-
                 ///////////////////////////Statystyki symulacji
                 DayStat dayStat=null;//zawiera statystyki dotyczące danego dnia
                 if(total_dead_animals==0){
@@ -212,7 +211,9 @@ public class SimulationEngine implements IEngine, Runnable {
         }else {
             if( dead_fields != null) {
                 for(Animal animal : dead_fields){
-                    preferable_fields_xy.add(animal.getPosition());
+                    if(!plants.containsKey(animal.getPosition())&&!preferable_fields_xy.contains(animal.getPosition())) {
+                        preferable_fields_xy.add(animal.getPosition());
+                    }
                 }
             }
         }
@@ -246,7 +247,6 @@ public class SimulationEngine implements IEngine, Runnable {
             }
          }
 
-
         int onNotPreferable = (int) Math.ceil(0.2 * n_of_plants);
         int onPreferable = n_of_plants - onNotPreferable;
         int curr_spawn_counter = 0;
@@ -267,6 +267,7 @@ public class SimulationEngine implements IEngine, Runnable {
         if(preferable_fields_xy.size()<onPreferable){
             onPreferable=preferable_fields_xy.size();
         }
+
         while(curr_spawn_counter != onPreferable && preferable_fields_xy.size()!=0 && preferable_fields_xy.size()>=onPreferable) {
             int new_place_xy = (int) ((Math.random() * preferable_fields_xy.size() ));
             Vector2d xy = preferable_fields_xy.get(new_place_xy);
@@ -275,6 +276,8 @@ public class SimulationEngine implements IEngine, Runnable {
                     curr_spawn_counter++;
                 }
         }
+
+
     }
     private void animalsEating() {
         List<Animal> animals_at_position;
