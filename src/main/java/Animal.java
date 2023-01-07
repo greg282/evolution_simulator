@@ -10,6 +10,9 @@ public class Animal extends AbstractWorldMapElement {
 
     int n_of_children = 0;
 
+    int day_of_death=-1;
+
+    int plants_eated=0;
     private int age = 0;
 
     private int[] genome;

@@ -108,7 +108,6 @@ public class Simulation {
         Thread engineThread = new Thread(engine);
         engineThread.setDaemon(true);
         engineThread.start();
-
         primaryStage.setOnCloseRequest(event -> {
             engineThread.interrupt();
         });
@@ -156,6 +155,12 @@ public class Simulation {
                         elementBox = new VBox(circle);
                         elementBox.setAlignment(Pos.CENTER);
 
+                        int finalI = i;
+                        int finalJ = j;
+                        elementBox.setOnMouseClicked((event) -> Platform.runLater(()->{
+                            engine.setTrackedAnimal(map.animalAt(new Vector2d(finalI, finalJ)));
+                        }));
+
                     }
 
                     if ( plants.containsKey(new Vector2d(i,j)) ) {
@@ -172,6 +177,8 @@ public class Simulation {
         vBox.getChildren().remove(0);
         vBox.getChildren().add(0, gridPane);
     }
+
+
 
     public void mapRefresh() {
         Platform.runLater(this::renderGridPane);

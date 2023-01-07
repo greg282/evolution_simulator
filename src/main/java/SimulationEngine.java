@@ -1,3 +1,6 @@
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +14,10 @@ public class SimulationEngine implements IEngine, Runnable {
     private List<Animal> animals = new ArrayList<>();
     protected java.util.Map<Vector2d, Plant> plants;
 
+
     private  List<Animal> dead_fields;
+
+    private Animal trackedAnimal=null;
 
     private int plantEnergy;
     private int growingPlants;
@@ -116,6 +122,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 Thread.sleep(delay);
             } catch (InterruptedException exception) {
                 System.out.println("Simulation stopped");
+                break;
             }
 
             if (!paused) {
@@ -124,6 +131,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 for (int i = 0; i < animals.size(); i++) {
                     if ( animals.get(i).energy == 0 ) {
                         //generowanie statystyk
+                        animals.get(i).day_of_death=day;
                         total_dead_animals_age=animals.get(i).getAge();
                         total_dead_animals++;
                         /////////////////////
@@ -164,6 +172,13 @@ public class SimulationEngine implements IEngine, Runnable {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+
+                //sledzenie Animala
+                if(trackedAnimal!=null){
+                    AnimalStat animalStat= animalStat(day);//Zawiera aktualne statystyki wybrangeo animala
+                    //System.out.println(animalStat);
+                }
+
                 //refresh mapy
                 this.simulation.mapRefresh();
             }
@@ -304,6 +319,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 Collections.sort(animals_at_position, new AnimalComparator());
                 Animal best_animal = animals_at_position.get(animals_at_position.size() - 1);
                 best_animal.energy = best_animal.energy + plantEnergy;
+                best_animal.plants_eated++;
                 if (best_animal.energy>this.maxEnergy) best_animal.energy=this.maxEnergy;
                 plants.remove(animal.getPosition());
             }
@@ -503,6 +519,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 max_genom=curr_genom;
             }
         }
+
         dayStat.genom=GenomToCSVString(max_genom);
 
         return dayStat;
@@ -514,6 +531,9 @@ public class SimulationEngine implements IEngine, Runnable {
     }
 
     private String GenomToCSVString(int[] genom){
+        if (genom == null ){
+            return "";
+        }
         StringBuilder result= new StringBuilder();
 
         for(int i=0;i<genom.length;i++){
@@ -523,4 +543,18 @@ public class SimulationEngine implements IEngine, Runnable {
         return result.toString();
     }
 
+    public void setTrackedAnimal(Animal animal){
+       trackedAnimal=animal;
+    }
+
+    private AnimalStat animalStat(int day){
+        AnimalStat animalStat=new AnimalStat();
+        animalStat.setEnergy(trackedAnimal.energy);
+        animalStat.setGenom(GenomToCSVString(trackedAnimal.getGenome()));
+        animalStat.setLifespan(trackedAnimal.getAge());
+        animalStat.setN_of_children(trackedAnimal.n_of_children);
+        animalStat.setDay_of_die(trackedAnimal.day_of_death);
+        animalStat.setPlants_eated(trackedAnimal.plants_eated);
+        return animalStat;
+    }
 }
