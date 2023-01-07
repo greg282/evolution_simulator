@@ -41,6 +41,9 @@ public class App extends Application {
     TextField genomeLengthInput = new TextField();
     RadioButton predestination = new RadioButton("Full predestination");
     RadioButton madness = new RadioButton("A bit of madness");
+
+    RadioButton saveTocsv = new RadioButton("Save to CSV file");
+    RadioButton none = new RadioButton("None");
     TextField refreshTimeInput = new TextField();
 
     public void start(Stage primaryStage) {
@@ -157,6 +160,14 @@ public class App extends Application {
         HBox behaviorVariant = new HBox(behaviorVariantLabel, predestination, madness);
         behaviorVariant.setSpacing(spacingValue);
         behaviorVariant.setAlignment(Pos.CENTER);
+        //
+        Label savingStatsLabel = new Label("Choose statistics saving option:");
+        ToggleGroup savingStatsGroup = new ToggleGroup();
+        saveTocsv.setToggleGroup(savingStatsGroup);
+        none.setToggleGroup(savingStatsGroup);
+        HBox savingStats = new HBox(savingStatsLabel, saveTocsv, none);
+        savingStats.setSpacing(spacingValue);
+        savingStats.setAlignment(Pos.CENTER);
 
         Label refreshTimeLabel = new Label("Refresh time (ms):");
         HBox refreshTime = new HBox(refreshTimeLabel, refreshTimeInput);
@@ -191,6 +202,7 @@ public class App extends Application {
                 mutationVariant,
                 genomeLength,
                 behaviorVariant,
+                savingStats,
                 refreshTime,
                 start,
                 invalidArgument
@@ -217,6 +229,7 @@ public class App extends Application {
                     if (mapHeightInput.getText().isEmpty()) throw new IllegalArgumentException("'Map height' text field is empty!");
                     if (mapWidthInput.getText().isEmpty()) throw new IllegalArgumentException("'Map width' text field is empty!");
                     if (mapVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Map variant was not selected!");
+                    if (savingStatsGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Saving Stats was not selected!");
                     if (startingPlantsInput.getText().isEmpty()) throw new IllegalArgumentException("'Starting number of plants' text field is empty!");
                     if (providedEnergyInput.getText().isEmpty()) throw new IllegalArgumentException("'Energy provided by eating' plant text field is empty!");
                     if (growingPlantsInput.getText().isEmpty()) throw new IllegalArgumentException("'Number of plants growing each day' text field is empty!");
@@ -277,6 +290,7 @@ public class App extends Application {
                             equators.isSelected(),
                             randomness.isSelected(),
                             predestination.isSelected(),
+                            saveTocsv.isSelected(),
                             Integer.parseInt(refreshTimeInput.getText())
                     );
                     simulation.start(new Stage());

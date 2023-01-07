@@ -29,6 +29,8 @@ public class SimulationEngine implements IEngine, Runnable {
     private boolean randomnessVariant;
     private boolean predestinationVariant;
 
+    private boolean saveToCsv;
+
     private int delay = 0;
     private boolean paused = false;
 
@@ -50,7 +52,8 @@ public class SimulationEngine implements IEngine, Runnable {
             boolean globeVariant,
             boolean equatorsVariant,
             boolean randomnessVariant,
-            boolean predestinationVariant
+            boolean predestinationVariant,
+            boolean saveToCsv
     ) {
         this.simulation = simulation;
         this.map = map;
@@ -68,6 +71,7 @@ public class SimulationEngine implements IEngine, Runnable {
         this.randomnessVariant = randomnessVariant;
         this.predestinationVariant = predestinationVariant;
         this.maxEnergy=maxEnergy;
+        this.saveToCsv=saveToCsv;
 
         //spawn początkowych zwierząt
         spawnStartingAnimals(startingAnimals, startingEnergy);
@@ -98,7 +102,9 @@ public class SimulationEngine implements IEngine, Runnable {
 
 
         try {
-            writeHeader(file);
+            if(saveToCsv){
+                writeHeader(file);
+            }
         } catch (IOException exception) {
             System.out.println("Simulation stopped");
         }
@@ -152,7 +158,9 @@ public class SimulationEngine implements IEngine, Runnable {
                 }
 
                 try {
-                    dayStat.writeToFile(file);
+                    if(saveToCsv){
+                        dayStat.writeToFile(file);
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

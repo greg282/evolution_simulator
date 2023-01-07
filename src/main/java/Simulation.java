@@ -41,6 +41,7 @@ public class Simulation {
             boolean equatorsVariant,
             boolean randomnessVariant,
             boolean predestinationVariant,
+            boolean saveToCsv,
             int refreshTime
     ) {
         this.maxEnergy=maxEnergy;
@@ -65,7 +66,8 @@ public class Simulation {
                 globeVariant,
                 equatorsVariant,
                 randomnessVariant,
-                predestinationVariant
+                predestinationVariant,
+                saveToCsv
         );
         engine.setDelay(refreshTime);
 
