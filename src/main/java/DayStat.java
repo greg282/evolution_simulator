@@ -7,7 +7,7 @@ public class DayStat {
     private int day;
     private int total_animals;
 
-
+    public String genom;
 
     private int total_plants;
     private int free_fields;
@@ -53,6 +53,7 @@ public class DayStat {
                 "," + total_plants +
                 "," + free_fields +
                 "," + avg_energy +
-                "," + avg_lifespan_of_dead;
+                "," + avg_lifespan_of_dead+
+                ","+genom;
     }
 }

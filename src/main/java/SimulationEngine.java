@@ -479,12 +479,40 @@ public class SimulationEngine implements IEngine, Runnable {
         dayStat.setFree_fields((map.getUpperRightVector().x*map.getUpperRightVector().y)-animals.size()-plants.size());
         dayStat.setAvg_lifespan_of_dead(dead_animal_avg_lifespan);
 
+        int[] max_genom=null;
+        int max_counter=0;
+        List<int[]> genoms = new ArrayList<>();
+        for(Animal animal:animals){
+            int [] curr_genom=animal.getGenome();
+            int curr_counter=0;
+            for(Animal other_animal:animals){
+                if(animal.getGenome()==other_animal.getGenome()){
+                    curr_counter++;
+                }
+            }
+            if(curr_counter>max_counter){
+                max_counter=curr_counter;
+                max_genom=curr_genom;
+            }
+        }
+        dayStat.genom=GenomToCSVString(max_genom);
+
         return dayStat;
     }
     private void writeHeader(File file) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-        writer.append("Day,Total_animals,Total_plants,Free_fields,Avg_energy,Avg_lifespan_of_dead");
+        writer.append("Day,Total_animals,Total_plants,Free_fields,Avg_energy,Avg_lifespan_of_dead,MostPopularGenom");
         writer.close();
+    }
+
+    private String GenomToCSVString(int[] genom){
+        StringBuilder result= new StringBuilder();
+
+        for(int i=0;i<genom.length;i++){
+            result.append(genom[i]);
+        }
+
+        return result.toString();
     }
 
 }
