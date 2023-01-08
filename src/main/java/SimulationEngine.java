@@ -525,7 +525,7 @@ public class SimulationEngine implements IEngine, Runnable {
         writer.close();
     }
 
-    private String GenomToCSVString(int[] genom){
+    public String GenomToCSVString(int[] genom){
         if (genom == null ){
             return "";
         }

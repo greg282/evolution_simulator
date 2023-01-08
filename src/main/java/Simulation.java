@@ -8,11 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Simulation {
 
@@ -167,6 +170,12 @@ public class Simulation {
                         double colorValue = (double) map.animalAt( new Vector2d(i,j) ).energy / this.maxEnergy;
                         Circle circle = new Circle(15);
                         circle.setFill(javafx.scene.paint.Color.color(1-colorValue, 1-colorValue, 1-colorValue));
+
+                        if(engine.getDayStatistics() != null && Objects.equals(engine.getDayStatistics().getGenome(), engine.GenomToCSVString(map.animalAt(new Vector2d(i, j)).getGenome()))) {
+                            circle.setStroke(Color.YELLOW);
+                            circle.setStrokeWidth(5);
+                        }
+
                         elementBox = new VBox(circle);
                         elementBox.setAlignment(Pos.CENTER);
 
