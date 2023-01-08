@@ -160,8 +160,8 @@ public class App extends Application {
         HBox behaviorVariant = new HBox(behaviorVariantLabel, predestination, madness);
         behaviorVariant.setSpacing(spacingValue);
         behaviorVariant.setAlignment(Pos.CENTER);
-        //
-        Label savingStatsLabel = new Label("Choose statistics saving option:");
+
+        Label savingStatsLabel = new Label("Statistics saving option:");
         ToggleGroup savingStatsGroup = new ToggleGroup();
         saveTocsv.setToggleGroup(savingStatsGroup);
         none.setToggleGroup(savingStatsGroup);
@@ -229,7 +229,6 @@ public class App extends Application {
                     if (mapHeightInput.getText().isEmpty()) throw new IllegalArgumentException("'Map height' text field is empty!");
                     if (mapWidthInput.getText().isEmpty()) throw new IllegalArgumentException("'Map width' text field is empty!");
                     if (mapVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Map variant was not selected!");
-                    if (savingStatsGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Saving Stats was not selected!");
                     if (startingPlantsInput.getText().isEmpty()) throw new IllegalArgumentException("'Starting number of plants' text field is empty!");
                     if (providedEnergyInput.getText().isEmpty()) throw new IllegalArgumentException("'Energy provided by eating' plant text field is empty!");
                     if (growingPlantsInput.getText().isEmpty()) throw new IllegalArgumentException("'Number of plants growing each day' text field is empty!");
@@ -244,13 +243,14 @@ public class App extends Application {
                     if (mutationVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Mutation variant was not selected!");
                     if (genomeLengthInput.getText().isEmpty()) throw new IllegalArgumentException("'Animal genome length' text field is empty!");
                     if (behaviorVariantGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Behavior variant was not selected!");
+                    if (savingStatsGroup.getSelectedToggle() == null) throw new IllegalArgumentException("Statistics saving option was not selected!");
                     if (refreshTimeInput.getText().isEmpty()) throw new IllegalArgumentException("'Refresh time' text field is empty!");
 
-                    // checking if a number is above the lower bounds
+                    // checking if a number is above the lower limit
                     if (Integer.parseInt(mapHeightInput.getText()) <= 0) throw new IllegalArgumentException("Map height is less than or equal to zero");
                     if (Integer.parseInt(mapWidthInput.getText()) <= 0) throw new IllegalArgumentException("Map width is less than or equal to zero");
                     if (Integer.parseInt(startingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Starting number of plants is less than zero");
-                    if (Integer.parseInt(providedEnergyInput.getText()) < 0) throw new IllegalArgumentException("Energy provided by eating is less than zero");
+                    if (Integer.parseInt(providedEnergyInput.getText()) < 0) throw new IllegalArgumentException("Energy provided by eating plant is less than zero");
                     if (Integer.parseInt(growingPlantsInput.getText()) < 0) throw new IllegalArgumentException("Number of plants growing each day is less than zero");
                     if (Integer.parseInt(startingAnimalsInput.getText()) < 0) throw new IllegalArgumentException("Starting number of animals is less than zero");
                     if (Integer.parseInt(startingEnergyInput.getText()) < 0) throw new IllegalArgumentException("Starting animal energy is less than zero");
@@ -260,10 +260,19 @@ public class App extends Application {
                     if (Integer.parseInt(mutationMinimumInput.getText()) < 0) throw new IllegalArgumentException("Minimum number of mutations is less than zero");
                     if (Integer.parseInt(mutationMaximumInput.getText()) < 0) throw new IllegalArgumentException("Maximum number of mutations is less than zero");
                     if (Integer.parseInt(genomeLengthInput.getText()) <= 0) throw new IllegalArgumentException("Animal genome length is less than or equal to zero");
-                    if (Integer.parseInt(refreshTimeInput.getText()) <= 0) throw new IllegalArgumentException("Refresh time is less than or equal to zero");
+                    if (Integer.parseInt(refreshTimeInput.getText()) < 10) throw new IllegalArgumentException("Refresh time value is too low");
+
+                    // checking if a number is below the upper limit
+                    if (Integer.parseInt(mapHeightInput.getText()) > 200) throw new IllegalArgumentException("Map height is too large");
+                    if (Integer.parseInt(mapWidthInput.getText()) > 200) throw new IllegalArgumentException("Map width is too large");
+                    if (Integer.parseInt(startingAnimalsInput.getText()) > 1000) throw new IllegalArgumentException("Starting number of animals is too large");
+                    if (Integer.parseInt(maxEnergyInput.getText()) > 1000) throw new IllegalArgumentException("Maximum animal energy is too large");
+                    if (Integer.parseInt(genomeLengthInput.getText()) > 1000) throw new IllegalArgumentException("Animal genome length is too large");
+                    if (Integer.parseInt(refreshTimeInput.getText()) > 60000) throw new IllegalArgumentException("Refresh time value is too large. Do you really want to wait that long?");
 
                     // checking relations between parameters
                     if (Integer.parseInt(startingPlantsInput.getText()) > Integer.parseInt(mapHeightInput.getText()) * Integer.parseInt(mapWidthInput.getText())) throw new IllegalArgumentException("Starting number of plants is bigger than number of all map fields");
+                    if (Integer.parseInt(providedEnergyInput.getText()) > Integer.parseInt(maxEnergyInput.getText())) throw new IllegalArgumentException("Energy provided by eating plant is bigger than maximum animal energy");
                     if (Integer.parseInt(growingPlantsInput.getText()) > Integer.parseInt(mapHeightInput.getText()) * Integer.parseInt(mapWidthInput.getText())) throw new IllegalArgumentException("Number of plants growing each day is bigger than number of all map fields");
                     if (Integer.parseInt(startingEnergyInput.getText()) > Integer.parseInt(maxEnergyInput.getText())) throw new IllegalArgumentException("Starting animal energy is bigger than maximum animal energy");
                     if (Integer.parseInt(breedReadyInput.getText()) > Integer.parseInt(maxEnergyInput.getText())) throw new IllegalArgumentException("Energy needed to consider animal ready to breed is bigger than maximum animal energy");
@@ -340,6 +349,8 @@ public class App extends Application {
             genomeLengthInput.setText(obj.getJSONObject("animals").getString("genomeLength"));
             if (Objects.equals(obj.getJSONObject("animals").getString("behaviourVariant"), "predestination")) predestination.setSelected(true);
             else madness.setSelected(true);
+            if (obj.getJSONObject("other").getBoolean("saveStatisticsToCsv")) saveTocsv.setSelected(true);
+            else none.setSelected(true);
             refreshTimeInput.setText(obj.getJSONObject("other").getString("refreshTime"));
 
         } catch (IOException | URISyntaxException exception) {

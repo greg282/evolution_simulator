@@ -23,12 +23,13 @@
         "mutations": {
             "minimum": "1",
             "maximum": "3",
-            "variant": "randomness"
+            "variant": "correction"
         },
         "genomeLength": "7",
         "behaviourVariant": "predestination"
     },
     "other": {
+        "saveStatisticsToCsv": false,
         "refreshTime": "200"
     }
 }

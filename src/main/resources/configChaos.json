@@ -1,34 +1,35 @@
 {
     "map": {
         "dimensions": {
-            "height": "15",
-            "width": "15"
+            "height": "30",
+            "width": "25"
         },
         "variant": "portal"
     },
     "plants": {
         "startingNumber": "29",
         "energyProvided": "6",
-        "growingEachDay": "5",
+        "growingEachDay": "60",
         "growthVariant": "corpses"
     },
     "animals": {
         "startingNumber": "30",
-        "startingEnergy": "100",
-        "maxEnergy": "100",
+        "startingEnergy": "30",
+        "maxEnergy": "30",
         "breed": {
             "energyRequire": "5",
             "energyUsed": "2"
         },
         "mutations": {
-            "minimum": "1",
-            "maximum": "3",
+            "minimum": "4",
+            "maximum": "5",
             "variant": "randomness"
         },
-        "genomeLength": "3",
+        "genomeLength": "5",
         "behaviourVariant": "madness"
     },
     "other": {
+        "saveStatisticsToCsv": false,
         "refreshTime": "100"
     }
 }

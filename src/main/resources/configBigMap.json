@@ -1,34 +1,35 @@
 {
     "map": {
         "dimensions": {
-            "height": "23",
-            "width": "40"
+            "height": "150",
+            "width": "100"
         },
         "variant": "globe"
     },
     "plants": {
-        "startingNumber": "100",
+        "startingNumber": "500",
         "energyProvided": "4",
-        "growingEachDay": "20",
+        "growingEachDay": "200",
         "growthVariant": "equators"
     },
     "animals": {
-        "startingNumber": "8",
-        "startingEnergy": "30",
-        "maxEnergy": "30",
+        "startingNumber": "500",
+        "startingEnergy": "60",
+        "maxEnergy": "60",
         "breed": {
-            "energyRequire": "5",
-            "energyUsed": "2"
+            "energyRequire": "20",
+            "energyUsed": "10"
         },
         "mutations": {
-            "minimum": "1",
-            "maximum": "3",
+            "minimum": "2",
+            "maximum": "15",
             "variant": "randomness"
         },
-        "genomeLength": "7",
+        "genomeLength": "20",
         "behaviourVariant": "predestination"
     },
     "other": {
+        "saveStatisticsToCsv": false,
         "refreshTime": "100"
     }
 }
