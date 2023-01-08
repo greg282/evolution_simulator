@@ -134,7 +134,7 @@ public class SimulationEngine implements IEngine, Runnable {
                     if ( animals.get(i).energy == 0 ) {
                         //generowanie statystyk
                         animals.get(i).day_of_death=day;
-                        total_dead_animals_age=animals.get(i).getAge();
+                        total_dead_animals_age+=animals.get(i).getAge();
                         total_dead_animals++;
                         /////////////////////
                         dead_fields.add(animals.get(i));
@@ -412,7 +412,14 @@ public class SimulationEngine implements IEngine, Runnable {
             new_genome.add(parent1.getGenome()[i]);
         }
 
-        range = parent2.getGenome().length - 1 - (int) Math.round(parent2.getGenome().length * percent_of_parent2);
+        if(new_genome.size()!=0){
+            range=parent2.getGenome().length-new_genome.size();
+
+        }else {
+            range = parent2.getGenome().length - 1 - (int) Math.round(parent2.getGenome().length * percent_of_parent2);
+
+        }
+
         if(range<0){
             range=0;
         }
