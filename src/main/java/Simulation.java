@@ -3,11 +3,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -18,7 +20,10 @@ public class Simulation {
     private Map map;
     private int maxEnergy;
     protected java.util.Map<Vector2d, Plant> plants = new HashMap<>();
+
     private VBox vBox;
+    private Group group;
+    private GridPane gridPane;
 
     private int cellWidth = 40;
     private int cellHeight = 40;
@@ -97,9 +102,19 @@ public class Simulation {
 
     public void start(Stage primaryStage) {
 
+        group = new Group(new GridPane());
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(vBox, group);
+        Scene scene = new Scene(hBox, 1200, 800);
         renderGridPane();
 
-        Scene scene = new Scene(vBox, cellWidth * (map.getUpperRightVector().x + 2), cellHeight * (map.getUpperRightVector().y + 2) + 100);
+        vBox.minWidthProperty().bind(scene.widthProperty().multiply(0.4));
+        vBox.maxWidthProperty().bind(scene.widthProperty().multiply(0.4));
+
+        Scale scale = new Scale();
+        scale.xProperty().bind(scene.widthProperty().add(vBox.widthProperty().negate()).divide(gridPane.widthProperty()));
+        scale.yProperty().bind(scene.heightProperty().divide(gridPane.heightProperty()));
+        group.getTransforms().add(scale);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Evolution Simulator");
@@ -115,7 +130,7 @@ public class Simulation {
 
     private void renderGridPane() {
 
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         gridPane.setGridLinesVisible(true);
 
         Label newLabel = new Label("y/x");
@@ -172,13 +187,10 @@ public class Simulation {
             }
         }
 
+        group.getChildren().remove(0);
+        group.getChildren().add(0, gridPane);
 
-
-        vBox.getChildren().remove(0);
-        vBox.getChildren().add(0, gridPane);
     }
-
-
 
     public void mapRefresh() {
         Platform.runLater(this::renderGridPane);
