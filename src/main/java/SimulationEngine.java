@@ -13,6 +13,7 @@ public class SimulationEngine implements IEngine, Runnable {
     private Simulation simulation;
     private List<Animal> animals = new ArrayList<>();
     protected java.util.Map<Vector2d, Plant> plants;
+    private DayStat dayStat;
 
 
     private  List<Animal> dead_fields;
@@ -157,7 +158,6 @@ public class SimulationEngine implements IEngine, Runnable {
                 //wzrastanie nowych roślin na wybranych polach mapy
                 addPlants(growingPlants);
                 ///////////////////////////Statystyki symulacji
-                DayStat dayStat=null;//zawiera statystyki dotyczące danego dnia
                 if(total_dead_animals==0){
                     dayStat=generateDayStatistic(day,0);
                 }
@@ -556,5 +556,9 @@ public class SimulationEngine implements IEngine, Runnable {
         animalStat.setDay_of_die(trackedAnimal.day_of_death);
         animalStat.setPlants_eated(trackedAnimal.plants_eated);
         return animalStat;
+    }
+
+    public DayStat getDayStatistics() {
+        return dayStat;
     }
 }

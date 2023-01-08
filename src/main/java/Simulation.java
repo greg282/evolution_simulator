@@ -49,7 +49,7 @@ public class Simulation {
             boolean saveToCsv,
             int refreshTime
     ) {
-        this.maxEnergy=maxEnergy;
+        this.maxEnergy = maxEnergy;
 
         map = new Map(mapWidth, mapHeight);
 
@@ -190,6 +190,61 @@ public class Simulation {
         group.getChildren().remove(0);
         group.getChildren().add(0, gridPane);
 
+        updateStatistics();
+
+    }
+
+    private void updateStatistics() {
+
+        VBox Statistics = new VBox(10);
+
+        DayStat dayStat = engine.getDayStatistics();
+        if (dayStat != null) {
+
+            Label StatisticsTitleLabel = new Label("Statistics");
+            StatisticsTitleLabel.setStyle("-fx-font-size: 15pt; -fx-font-weight: bold");
+            HBox StatisticsTitle = new HBox(StatisticsTitleLabel);
+            StatisticsTitle.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(0, StatisticsTitle);
+
+            Label dayLabel = new Label("Day: " + dayStat.getDay());
+            HBox day = new HBox(dayLabel);
+            day.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(1, day);
+
+            Label noAnimalsLabel = new Label("Total number of animals: " + dayStat.getTotal_animals());
+            HBox noAnimals = new HBox(noAnimalsLabel);
+            noAnimals.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(2, noAnimals);
+
+            Label noPlantsLabel = new Label("Total number of plants: " + dayStat.getTotal_plants());
+            HBox noPlants = new HBox(noPlantsLabel);
+            noPlants.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(3, noPlants);
+
+            Label noFreeFieldsLabel = new Label("Total number of free fields: " + dayStat.getFree_fields());
+            HBox noFreeFields = new HBox(noFreeFieldsLabel);
+            noFreeFields.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(4, noFreeFields);
+
+            Label genomeLabel = new Label("Most popular genome: " + dayStat.getGenome());
+            HBox genome = new HBox(genomeLabel);
+            genome.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(5, genome);
+
+            Label averageEnergyLabel = new Label("Average energy level: " + dayStat.getAvg_energy());
+            HBox averageEnergy = new HBox(averageEnergyLabel);
+            averageEnergy.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(6, averageEnergy);
+
+            Label averageLifespanLabel = new Label("Average animals lifespan: " + dayStat.getAvg_lifespan_of_dead() + " days");
+            HBox averageLifespan = new HBox(averageLifespanLabel);
+            averageLifespan.setAlignment(Pos.CENTER);
+            Statistics.getChildren().add(7, averageLifespan);
+        }
+
+        vBox.getChildren().remove(0);
+        vBox.getChildren().add(0, Statistics);
     }
 
     public void mapRefresh() {
