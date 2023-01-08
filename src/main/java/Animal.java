@@ -80,6 +80,10 @@ public class Animal extends AbstractWorldMapElement {
         return genome;
     }
 
+    public int getCurrent() {
+        return current;
+    }
+
     public int getAge() {
         return age;
     }

@@ -17,7 +17,7 @@ public class SimulationEngine implements IEngine, Runnable {
 
 
     private  List<Animal> dead_fields;
-
+    private int day=0;
     private Animal trackedAnimal=null;
 
     private int plantEnergy;
@@ -100,7 +100,6 @@ public class SimulationEngine implements IEngine, Runnable {
     }
 
     public void run() {
-        int day=0;
         int total_dead_animals=0;
         int total_dead_animals_age = 0;
         Date now = new Date();
@@ -118,7 +117,7 @@ public class SimulationEngine implements IEngine, Runnable {
 
 
         while (true) {
-            day++;
+
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException exception) {
@@ -127,6 +126,8 @@ public class SimulationEngine implements IEngine, Runnable {
             }
 
             if (!paused) {
+                day++;
+
                 dead_fields=new ArrayList<>();
                 //usunięcie martwych zwierząt zwierząt z mapy
                 for (int i = 0; i < animals.size(); i++) {
@@ -171,12 +172,6 @@ public class SimulationEngine implements IEngine, Runnable {
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                }
-
-                //sledzenie Animala
-                if(trackedAnimal!=null){
-                    AnimalStat animalStat= animalStat(day);//Zawiera aktualne statystyki wybrangeo animala
-                    //System.out.println(animalStat);
                 }
 
                 //refresh mapy
@@ -551,6 +546,7 @@ public class SimulationEngine implements IEngine, Runnable {
         AnimalStat animalStat=new AnimalStat();
         animalStat.setEnergy(trackedAnimal.energy);
         animalStat.setGenom(GenomToCSVString(trackedAnimal.getGenome()));
+        animalStat.setCurrent(trackedAnimal.getCurrent());
         animalStat.setLifespan(trackedAnimal.getAge());
         animalStat.setN_of_children(trackedAnimal.n_of_children);
         animalStat.setDay_of_die(trackedAnimal.day_of_death);
@@ -560,5 +556,12 @@ public class SimulationEngine implements IEngine, Runnable {
 
     public DayStat getDayStatistics() {
         return dayStat;
+    }
+
+    public AnimalStat getAnimalStatistics() {
+        if (trackedAnimal == null) return null;
+        else {
+            return animalStat(day);
+        }
     }
 }

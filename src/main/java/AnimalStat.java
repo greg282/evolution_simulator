@@ -1,5 +1,6 @@
 public class AnimalStat {
     private String genom;
+    private int current;
     private int energy;
     private int plants_eated=0;
     private int n_of_children;
@@ -25,6 +26,13 @@ public class AnimalStat {
 
     public void setGenom(String genom) {
         this.genom = genom;
+    }
+
+    public void setCurrent(int current) {
+        this.current = current;
+    }
+    public int getCurrent() {
+        return current;
     }
 
     public int getEnergy() {

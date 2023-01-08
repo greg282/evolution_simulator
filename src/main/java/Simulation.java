@@ -96,7 +96,7 @@ public class Simulation {
             }
         });
 
-        vBox = new VBox(10, new Label(""), startStop);
+        vBox = new VBox(50, new Label(""), new Label(""), startStop);
 
     }
 
@@ -174,6 +174,7 @@ public class Simulation {
                         int finalJ = j;
                         elementBox.setOnMouseClicked((event) -> Platform.runLater(()->{
                             engine.setTrackedAnimal(map.animalAt(new Vector2d(finalI, finalJ)));
+                            updateTrackedAnimal();
                         }));
 
                     }
@@ -191,6 +192,7 @@ public class Simulation {
         group.getChildren().add(0, gridPane);
 
         updateStatistics();
+        updateTrackedAnimal();
 
     }
 
@@ -202,7 +204,7 @@ public class Simulation {
         if (dayStat != null) {
 
             Label StatisticsTitleLabel = new Label("Statistics");
-            StatisticsTitleLabel.setStyle("-fx-font-size: 15pt; -fx-font-weight: bold");
+            StatisticsTitleLabel.setStyle("-fx-padding: 10 0 0 0; -fx-font-size: 15pt; -fx-font-weight: bold");
             HBox StatisticsTitle = new HBox(StatisticsTitleLabel);
             StatisticsTitle.setAlignment(Pos.CENTER);
             Statistics.getChildren().add(0, StatisticsTitle);
@@ -245,6 +247,70 @@ public class Simulation {
 
         vBox.getChildren().remove(0);
         vBox.getChildren().add(0, Statistics);
+    }
+
+    private void updateTrackedAnimal() {
+
+        VBox TrackedAnimal = new VBox(10);
+
+        AnimalStat animalStat = engine.getAnimalStatistics();
+
+        if (animalStat == null) {
+            Label TrackedAnimalTitleLabel = new Label("Click on an animal to track it");
+            TrackedAnimalTitleLabel.setStyle("-fx-font-size: 15pt; -fx-font-weight: bold");
+            HBox TrackedAnimalTitle = new HBox(TrackedAnimalTitleLabel);
+            TrackedAnimalTitle.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(0, TrackedAnimalTitle);
+        }
+
+        else {
+
+            Label TrackedAnimalTitleLabel = new Label("Tracking animal");
+            TrackedAnimalTitleLabel.setStyle("-fx-font-size: 15pt; -fx-font-weight: bold");
+            HBox TrackedAnimalTitle = new HBox(TrackedAnimalTitleLabel);
+            TrackedAnimalTitle.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(0, TrackedAnimalTitle);
+
+            Label genomeLabel = new Label("Genome: " + animalStat.getGenom());
+            HBox genome = new HBox(genomeLabel);
+            genome.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(1, genome);
+
+            Label activePartLabel = new Label("Active part: " + animalStat.getCurrent());
+            HBox activePart = new HBox(activePartLabel);
+            activePart.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(2, activePart);
+
+            Label energyLabel = new Label("Energy: " + animalStat.getEnergy());
+            HBox energy = new HBox(energyLabel);
+            energy.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(3, energy);
+
+            Label plantsLabel = new Label("Number of plants eaten: " + animalStat.getPlants_eated());
+            HBox plants = new HBox(plantsLabel);
+            plants.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(4, plants);
+
+            Label noChildrenLabel = new Label("Number of children: " + animalStat.getN_of_children());
+            HBox noChildren = new HBox(noChildrenLabel);
+            noChildren.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(5, noChildren);
+
+            Label lifespanLabel = new Label("Lifespan: " + animalStat.getLifespan() + " days");
+            HBox lifespan = new HBox(lifespanLabel);
+            lifespan.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(6, lifespan);
+
+            Label diedDayLabel;
+            if (animalStat.getDay_of_die() == -1) diedDayLabel = new Label("Animal is alive");
+            else diedDayLabel = new Label("Died on day: " + animalStat.getDay_of_die());
+            HBox diedDay = new HBox(diedDayLabel);
+            diedDay.setAlignment(Pos.CENTER);
+            TrackedAnimal.getChildren().add(7, diedDay);
+        }
+
+        vBox.getChildren().remove(1);
+        vBox.getChildren().add(1, TrackedAnimal);
     }
 
     public void mapRefresh() {
