@@ -261,6 +261,7 @@ public class App extends Application {
                     if (Integer.parseInt(mutationMaximumInput.getText()) < 0) throw new IllegalArgumentException("Maximum number of mutations is less than zero");
                     if (Integer.parseInt(genomeLengthInput.getText()) <= 0) throw new IllegalArgumentException("Animal genome length is less than or equal to zero");
                     if (Integer.parseInt(refreshTimeInput.getText()) < 10) throw new IllegalArgumentException("Refresh time value is too low");
+                    if (Integer.parseInt(genomeLengthInput.getText()) < 3) throw new IllegalArgumentException("Genome length too low, minmal value = 3");
 
                     // checking if a number is below the upper limit
                     if (Integer.parseInt(mapHeightInput.getText()) > 200) throw new IllegalArgumentException("Map height is too large");

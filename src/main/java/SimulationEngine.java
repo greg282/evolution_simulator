@@ -385,6 +385,7 @@ public class SimulationEngine implements IEngine, Runnable {
         double percent_of_parent1 = ((double) parent1.energy / (double) (parent1.energy + parent2.energy));
         double percent_of_parent2 = 1 - percent_of_parent1;
 
+
         if (percent_of_parent2 > percent_of_parent1) { //ustawienie parent1 jako silniejszego
             double tmp = percent_of_parent1;
             percent_of_parent1 = percent_of_parent2;
@@ -412,20 +413,20 @@ public class SimulationEngine implements IEngine, Runnable {
             new_genome.add(parent1.getGenome()[i]);
         }
 
-        if(new_genome.size()!=0){
-            range=parent2.getGenome().length-new_genome.size();
 
-        }else {
-            range = parent2.getGenome().length - 1 - (int) Math.round(parent2.getGenome().length * percent_of_parent2);
+        range=parent2.getGenome().length-1-(genomeLength-new_genome.size());
+            if(range<0){
+                range=0;
+            }
+            for (int i=parent2.getGenome().length-1;i>range;i--) {
+                new_genome.add(parent2.getGenome()[i]);
+            }
 
-        }
 
-        if(range<0){
-            range=0;
-        }
-        for (int i=parent2.getGenome().length-1;i>=range;i--) {
-            new_genome.add(parent2.getGenome()[i]);
-        }
+
+
+
+
 
         return mutate(convertIntegers(new_genome));
     }
@@ -502,7 +503,8 @@ public class SimulationEngine implements IEngine, Runnable {
         avg_energy=avg_energy/animals.size();
         dayStat.setAvg_energy(avg_energy);
         dayStat.setTotal_plants(plants.size());
-        dayStat.setFree_fields((map.getUpperRightVector().x*map.getUpperRightVector().y)-animals.size()-plants.size());
+        int total_free=(map.getUpperRightVector().x*map.getUpperRightVector().y)-animals.size()-plants.size();
+        dayStat.setFree_fields(total_free<0?0:total_free);
         dayStat.setAvg_lifespan_of_dead(dead_animal_avg_lifespan);
 
         int[] max_genom=null;
