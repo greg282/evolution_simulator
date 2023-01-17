@@ -108,7 +108,7 @@ public class Simulation {
         group = new Group(new GridPane());
         HBox hBox = new HBox();
         hBox.getChildren().addAll(vBox, group);
-        Scene scene = new Scene(hBox, 1200, 800);
+        Scene scene = new Scene(hBox, 1000, 600);
         renderGridPane();
 
         vBox.minWidthProperty().bind(scene.widthProperty().multiply(0.4));

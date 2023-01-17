@@ -71,7 +71,7 @@ public class Map {
     public Animal animalAt(Vector2d position) {
        try {
             return animals.get(position).get(0); //wybiera pierwsze zwierzę z listy do wyświetlenia
-       }catch (NullPointerException exception){
+       }catch (Exception exception){
            return new Animal(this,position,new int[]{0},0);
        }
 

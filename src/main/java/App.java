@@ -3,6 +3,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -183,6 +184,9 @@ public class App extends Application {
         HBox invalidArgument = new HBox(invalidArgumentLabel);
         invalidArgument.setAlignment(Pos.CENTER);
 
+
+
+
         VBox vbox = new VBox(
                 configSelect,
                 config,
@@ -210,10 +214,20 @@ public class App extends Application {
         vbox.setSpacing(20);
         vbox.setPadding(new Insets(25, 25, 25, 25));
 
-        Scene scene = new Scene(vbox, 800, 1000);
+        ScrollPane scrollPane=new ScrollPane();
+        scrollPane.setPrefSize(800, 800);
+        scrollPane.setContent(vbox);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
+
+        Scene scene = new Scene(scrollPane, 800, 600);
+
+
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Evolution Simulator (Settings)");
+
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> {
