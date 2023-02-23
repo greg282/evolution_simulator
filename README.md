@@ -36,14 +36,14 @@ Evolution simulator is a program written for Object Oriented Programming Course.
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/t1.png" alt="screenshot of main menu of the app">
+  <img src="screenshot/t1.png" alt="screenshot of main menu of the app">
     <p align="center">
     Main menu, the first thing you see when starting the application.
         </p>
 </p>
 
 <p align="center">
-  <img src="screenshots/image.png" alt="screenshot of application running">
+  <img src="screenshot/image.png" alt="screenshot of application running">
       <p align="center">
     Application running and recording all the statistics, which you can export later on to a .csv file.
     </p>
